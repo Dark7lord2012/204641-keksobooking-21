@@ -39,6 +39,13 @@ const FEATURES = [
   `conditioner`
 ];
 
+let mapPins = document.querySelector(`.map__pins`);
+let mapWidth = (document.querySelector(`.map__overlay`).offsetWidth - 20); // 20 - ширина полоски для прокрутки (предполагается)
+let randomElementArray = (array) => {
+  return array[Math.round(Math.random() * (array.length - 1))];
+};
+
+// Генерация случайных квартир
 let generateApartments = (length) => {
   let apartments = [];
 
@@ -51,23 +58,45 @@ let generateApartments = (length) => {
         title: `Cтрока, заголовок предложения`,
         address: `Площадь Сталина`,
         price: 1000,
-        type: TYPE_APARTMENT[Math.round(Math.random() * (TYPE_APARTMENT.length - 1))],
-        rooms: Math.round(Math.random() * 10),
-        guests: Math.round(Math.random() * 10),
-        checkin: CHECHKIN[Math.round(Math.random() * (CHECHKIN.length - 1))],
-        checkout: CHECHKOUT[Math.round(Math.random() * (CHECHKOUT.length - 1))],
-        features: FEATURES[Math.round(Math.random() * (FEATURES.length - 1))],
+        type: randomElementArray(TYPE_APARTMENT),
+        rooms: Math.round(Math.random() * 3),
+        guests: Math.round(Math.random() * 2),
+        checkin: randomElementArray(CHECHKIN),
+        checkout: randomElementArray(CHECHKOUT),
+        features: randomElementArray(FEATURES),
         description: `Жилье это хорошее, мамой клянусь!`,
         photos: [`http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel1.jpg`]
       },
       location: {
-        x: 0,
-        y: 0
+        // магия с числами
+        x: Math.round(Math.random() * (mapWidth - 40) + 40),
+        // магические числа
+        y: Math.round(Math.random() * (630 - 130) + 130)
       }
     };
   }
-
   return apartments;
 };
 
-console.table(generateApartments(8));
+document.querySelector(`.map`).classList.remove(`map--faded`);
+
+let teplatePin = document.querySelector(`#pin`).content.querySelector(`button`);
+
+let renderPin = (pin) => {
+  let pinElement = teplatePin.cloneNode(true);
+  let pinImg = pinElement.querySelector(`img`);
+  pinImg.src = pin.author.avatar;
+  pinImg.alt = pin.offer.title;
+  // снова магия
+  pinElement.style = `left: ${pin.location.x - 20}px; top: ${pin.location.y - 40}px;`;
+
+  return pinElement;
+};
+
+let apartments = generateApartments(8);
+
+let fragment = document.createDocumentFragment();
+for (let i = 0; i < apartments.length; i++) {
+  fragment.appendChild(renderPin(apartments[i]));
+}
+mapPins.appendChild(fragment);

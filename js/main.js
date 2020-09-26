@@ -68,9 +68,8 @@ let generateApartments = (length) => {
         photos: [`http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel1.jpg`]
       },
       location: {
-        // магия с числами
-        x: Math.round(Math.random() * (mapWidth - 40) + 40),
-        // магические числа
+        x: Math.round(Math.random() * mapWidth),
+        // Диапазон из ТЗ (130 - 630)
         y: Math.round(Math.random() * (630 - 130) + 130)
       }
     };
@@ -94,7 +93,7 @@ let renderPin = (pin) => {
   return pinElement;
 };
 
-let apartments = generateApartments(20);
+let apartments = generateApartments(40);
 
 let fragment = document.createDocumentFragment();
 for (let i = 0; i < apartments.length; i++) {

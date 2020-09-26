@@ -87,13 +87,14 @@ let renderPin = (pin) => {
   let pinImg = pinElement.querySelector(`img`);
   pinImg.src = pin.author.avatar;
   pinImg.alt = pin.offer.title;
-  // снова магия
-  pinElement.style = `left: ${pin.location.x - 20}px; top: ${pin.location.y - 40}px;`;
+  //
+  pinElement.style.left = `${pin.location.x - (pinElement.offsetWidth / 2)}px`;
+  pinElement.style.top = `${pin.location.y - pinElement.offsetHeight}px`;
 
   return pinElement;
 };
 
-let apartments = generateApartments(8);
+let apartments = generateApartments(20);
 
 let fragment = document.createDocumentFragment();
 for (let i = 0; i < apartments.length; i++) {

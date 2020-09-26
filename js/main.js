@@ -41,8 +41,8 @@ const FEATURES = [
 
 let mapPins = document.querySelector(`.map__pins`);
 let mapWidth = (document.querySelector(`.map__overlay`).offsetWidth - 20); // 20 - ширина полоски для прокрутки (предполагается)
-let mapRangeTop = 130;
-let mapRangeBottom = 630;
+let MAP_RANGE_TOP = 130;
+let MAP_RANGE_BOTTOM = 630;
 
 let randomElementArray = (array) => {
   return array[Math.round(Math.random() * (array.length - 1))];
@@ -73,7 +73,7 @@ let generateApartments = (length) => {
       location: {
         x: Math.round(Math.random() * mapWidth),
         // Диапазон из ТЗ (130 - 630)
-        y: Math.round(Math.random() * (mapRangeBottom - mapRangeTop) + mapRangeTop)
+        y: Math.round(Math.random() * (MAP_RANGE_BOTTOM - MAP_RANGE_TOP) + MAP_RANGE_TOP)
       }
     };
   }

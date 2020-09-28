@@ -61,7 +61,7 @@ const getRandomNumber = (min, max) => {
 
 // Генерация случайных квартир
 const generateApartments = (length) => {
-  let apartments = [];
+  const apartments = [];
 
   for (let i = 0; i < length; i++) {
     apartments[i] = {

@@ -48,29 +48,33 @@ const FEATURES = [
 
 let mapPins = document.querySelector(`.map__pins`);
 let mapWidth = (document.querySelector(`.map__overlay`).offsetWidth - 20); // 20 - ширина полоски для прокрутки (предполагается)
-let MAP_RANGE_TOP = 130;
-let MAP_RANGE_BOTTOM = 630;
+const MAP_RANGE_TOP = 130;
+const MAP_RANGE_BOTTOM = 630;
 
-let randomElementArray = (array) => {
+const randomElementArray = (array) => {
   return array[Math.round(Math.random() * (array.length - 1))];
 };
 
+const getRandomNumber = (min, max) => {
+  return Math.round(Math.random() * (max - min) + min);
+};
+
 // Генерация случайных квартир
-let generateApartments = (length) => {
+const generateApartments = (length) => {
   let apartments = [];
 
   for (let i = 0; i < length; i++) {
     apartments[i] = {
       author: {
-        avatar: `${AVATARS[Math.round(Math.random() * (AVATARS.length - 1))]}`
+        avatar: `${AVATARS[getRandomNumber(0, AVATARS.length - 1)]}`
       },
       offer: {
         title: `Cтрока, заголовок предложения`,
         address: `Площадь Сталина`,
         price: 1300,
         type: randomElementArray(TYPE_APARTMENT),
-        rooms: Math.round(Math.random() * (3 - 1) + 1), // не бывает 0 комнат для 0 гостей
-        guests: Math.round(Math.random() * (2 - 1) + 1),
+        rooms: getRandomNumber(1, 3), // не бывает 0 комнат для 0 гостей
+        guests: getRandomNumber(1, 2),
         checkin: randomElementArray(CHECHKIN),
         checkout: randomElementArray(CHECHKOUT),
         features: [randomElementArray(FEATURES), randomElementArray(FEATURES), randomElementArray(FEATURES)],
@@ -82,8 +86,8 @@ let generateApartments = (length) => {
         ]
       },
       location: {
-        x: Math.round(Math.random() * mapWidth),
-        y: Math.round(Math.random() * (MAP_RANGE_BOTTOM - MAP_RANGE_TOP) + MAP_RANGE_TOP)
+        x: getRandomNumber(0, mapWidth),
+        y: getRandomNumber(MAP_RANGE_TOP, MAP_RANGE_BOTTOM)
       }
     };
   }
@@ -92,9 +96,10 @@ let generateApartments = (length) => {
 
 document.querySelector(`.map`).classList.remove(`map--faded`);
 
-let teplatePin = document.querySelector(`#pin`).content.querySelector(`button`);
+// Отрисовка метки
+const teplatePin = document.querySelector(`#pin`).content.querySelector(`button`);
 
-let renderPin = (pin) => {
+const renderPin = (pin) => {
   let pinElement = teplatePin.cloneNode(true);
   let pinImg = pinElement.querySelector(`img`);
   pinImg.src = pin.author.avatar;
@@ -105,76 +110,76 @@ let renderPin = (pin) => {
   return pinElement;
 };
 
-let apartments = generateApartments(8);
+const apartments = generateApartments(8);
 
-let fragment = document.createDocumentFragment();
+const fragment = document.createDocumentFragment();
 for (let i = 0; i < apartments.length; i++) {
   fragment.appendChild(renderPin(apartments[i]));
 }
 mapPins.appendChild(fragment);
 
-// 3-2
-let firstApartment = apartments[0];
-let templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
+// Генерация объявления
+const firstApartment = apartments[0];
+const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 
-let renderCard = (card) => {
-  let cardElement = templateCard.cloneNode(true);
+const renderCard = (card) => {
+  const cardElement = templateCard.cloneNode(true);
 
-  let popupTitle = cardElement.querySelector(`.popup__title`);
+  const popupTitle = cardElement.querySelector(`.popup__title`);
   popupTitle.textContent = card.offer.title;
 
-  let popupAddress = cardElement.querySelector(`.popup__text--address`);
+  const popupAddress = cardElement.querySelector(`.popup__text--address`);
   popupAddress.textContent = card.offer.address;
 
-  let popupPrice = cardElement.querySelector(`.popup__text--price`);
+  const popupPrice = cardElement.querySelector(`.popup__text--price`);
   popupPrice.textContent = `${card.offer.price}₽/ночь`;
 
-  let popupType = cardElement.querySelector(`.popup__type`);
+  const popupType = cardElement.querySelector(`.popup__type`);
   popupType.textContent = TYPE_APARTMENT_RUSSIAN[card.offer.type];
 
-  let popupCapacity = cardElement.querySelector(`.popup__text--capacity`);
+  const popupCapacity = cardElement.querySelector(`.popup__text--capacity`);
   popupCapacity.textContent = `${card.offer.rooms} комнаты для ${card.offer.guests} гостей`;
 
-  let popupTime = cardElement.querySelector(`.popup__text--time`);
+  const popupTime = cardElement.querySelector(`.popup__text--time`);
   popupTime.textContent = `Заезд после ${card.offer.checkin} выезд до ${card.offer.checkout}`; // мнемоника?
 
   // Фичи
-  let popupFeatures = cardElement.querySelector(`.popup__features`);
-  let feature = cardElement.querySelector(`.popup__feature`);
+  const popupFeatures = cardElement.querySelector(`.popup__features`);
+  const feature = cardElement.querySelector(`.popup__feature`);
 
   while (popupFeatures.firstChild) {
     popupFeatures.removeChild(popupFeatures.firstChild);
   }
 
   for (let i = 0; i < card.offer.features.length; i++) {
-    let featureElement = feature.cloneNode(true);
-    featureElement.className = `feature feature--${card.offer.features[i]}`;
+    const featureElement = feature.cloneNode(true);
+    featureElement.className = `popup__feature popup__feature--${card.offer.features[i]}`;
     popupFeatures.appendChild(featureElement);
   }
 
-  let popupDescription = cardElement.querySelector(`.popup__description`);
+  const popupDescription = cardElement.querySelector(`.popup__description`);
   popupDescription.textContent = card.offer.description;
 
   // Фото
-  let popupPhotos = cardElement.querySelector(`.popup__photos`);
-  let popupPhoto = cardElement.querySelector(`.popup__photo`);
+  const popupPhotos = cardElement.querySelector(`.popup__photos`);
+  const popupPhoto = cardElement.querySelector(`.popup__photo`);
 
   while (popupPhotos.firstChild) {
     popupPhotos.removeChild(popupPhotos.firstChild);
   }
 
   for (let i = 0; i < card.offer.photos.length; i++) {
-    let photoElement = popupPhoto.cloneNode(true);
+    const photoElement = popupPhoto.cloneNode(true);
     photoElement.src = `${card.offer.photos[i]}`;
     popupPhotos.appendChild(photoElement);
   }
 
 
-  let popupAvatar = cardElement.querySelector(`.popup__avatar`);
+  const popupAvatar = cardElement.querySelector(`.popup__avatar`);
   popupAvatar.src = card.author.avatar;
 
   return cardElement;
 };
 
-let mapFilterContainer = document.querySelector(`.map__filters-container`);
+const mapFilterContainer = document.querySelector(`.map__filters-container`);
 mapFilterContainer.appendChild(renderCard(firstApartment));

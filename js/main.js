@@ -94,7 +94,22 @@ const generateApartments = (length) => {
   return apartments;
 };
 
-document.querySelector(`.map`).classList.remove(`map--faded`);
+// Первое открытие сайта, когда все отключено и деактивированно
+// document.querySelector(`.map`).classList.remove(`map--faded`);
+// // Форма фильтров на карте
+const mapFilters = document.querySelectorAll(`.map__filter`);
+for (let filter of mapFilters) {
+  filter.disabled = true;
+}
+const mapFeatures = document.querySelector(`.map__features`);
+mapFeatures.disabled = true;
+// // Форма объявления
+const adFormHeader = document.querySelector(`.ad-form-header`);
+adFormHeader.disabled = true;
+const adFormElements = document.querySelectorAll(`.ad-form__element`);
+for (let element of adFormElements) {
+  element.disabled = true;
+}
 
 // Отрисовка метки
 const teplatePin = document.querySelector(`#pin`).content.querySelector(`button`);
@@ -116,7 +131,15 @@ const fragment = document.createDocumentFragment();
 for (let i = 0; i < apartments.length; i++) {
   fragment.appendChild(renderPin(apartments[i]));
 }
-mapPins.appendChild(fragment);
+// mapPins.appendChild(fragment);
+
+// Деактивация меток
+const pins = document.querySelectorAll(`.map__pin`);
+for (let pin of pins) {
+  if (!pin.classList.contains(`map__pin--main`)) {
+    pin.disabled = true;
+  }
+}
 
 // Генерация объявления
 const firstApartment = apartments[0];
@@ -182,4 +205,6 @@ const renderCard = (card) => {
 };
 
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
-mapFilterContainer.appendChild(renderCard(firstApartment));
+
+// Закомментирован до лучших времен
+// mapFilterContainer.appendChild(renderCard(firstApartment));

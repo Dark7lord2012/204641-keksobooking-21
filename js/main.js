@@ -95,7 +95,6 @@ const generateApartments = (length) => {
 };
 
 // Первое открытие сайта, когда все отключено и деактивированно
-// document.querySelector(`.map`).classList.remove(`map--faded`);
 // // Форма фильтров на карте
 const mapFilters = document.querySelectorAll(`.map__filter`);
 for (let filter of mapFilters) {
@@ -125,14 +124,6 @@ const renderPin = (pin) => {
   return pinElement;
 };
 
-const apartments = generateApartments(8);
-
-const fragment = document.createDocumentFragment();
-for (let i = 0; i < apartments.length; i++) {
-  fragment.appendChild(renderPin(apartments[i]));
-}
-// mapPins.appendChild(fragment);
-
 // Деактивация меток
 const pins = document.querySelectorAll(`.map__pin`);
 for (let pin of pins) {
@@ -141,10 +132,40 @@ for (let pin of pins) {
   }
 }
 
-// Генерация объявления
-const firstApartment = apartments[0];
-const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
+// Активация сайта по клику главной метки
 
+const mainPin = document.querySelector(`.map__pin--main`);
+mainPin.addEventListener(`mousedown`, (evt) => {
+  if (evt.button === 0) {
+    // Убираем отключение активных элементов, написанные выше
+    document.querySelector(`.map`).classList.remove(`map--faded`);
+    mapFeatures.disabled = false;
+    for (let filter of mapFilters) {
+      filter.disabled = false;
+    }
+    const adForm = document.querySelector(`.ad-form`);
+    adForm.classList.remove(`ad-form--disabled`);
+    adFormHeader.disabled = false;
+    for (let element of adFormElements) {
+      element.disabled = false;
+    }
+    // Генерация и отрисовка метки
+    const apartments = generateApartments(8);
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < apartments.length; i++) {
+      fragment.appendChild(renderPin(apartments[i]));
+    }
+    mapPins.appendChild(fragment);
+    // Отрисовка карточки
+    const firstApartment = apartments[0];
+    mapFilterContainer.appendChild(renderCard(firstApartment));
+  }
+});
+
+// Генерация объявления
+
+const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 const renderCard = (card) => {
   const cardElement = templateCard.cloneNode(true);
 
@@ -206,5 +227,4 @@ const renderCard = (card) => {
 
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
 
-// Закомментирован до лучших времен
-// mapFilterContainer.appendChild(renderCard(firstApartment));
+

@@ -134,32 +134,42 @@ for (let pin of pins) {
 
 // Активация сайта по клику главной метки
 
+const onFormsActivate = () => {
+  // Убираем отключение активных элементов, написанные выше
+  document.querySelector(`.map`).classList.remove(`map--faded`);
+  mapFeatures.disabled = false;
+  for (let filter of mapFilters) {
+    filter.disabled = false;
+  }
+  const adForm = document.querySelector(`.ad-form`);
+  adForm.classList.remove(`ad-form--disabled`);
+  adFormHeader.disabled = false;
+  for (let element of adFormElements) {
+    element.disabled = false;
+  }
+  // Генерация и отрисовка метки
+  const apartments = generateApartments(8);
+  const fragment = document.createDocumentFragment();
+
+  for (let i = 0; i < apartments.length; i++) {
+    fragment.appendChild(renderPin(apartments[i]));
+  }
+  mapPins.appendChild(fragment);
+  // Отрисовка карточки
+  const firstApartment = apartments[0];
+  mapFilterContainer.appendChild(renderCard(firstApartment));
+};
+
 const mainPin = document.querySelector(`.map__pin--main`);
 mainPin.addEventListener(`mousedown`, (evt) => {
   if (evt.button === 0) {
-    // Убираем отключение активных элементов, написанные выше
-    document.querySelector(`.map`).classList.remove(`map--faded`);
-    mapFeatures.disabled = false;
-    for (let filter of mapFilters) {
-      filter.disabled = false;
-    }
-    const adForm = document.querySelector(`.ad-form`);
-    adForm.classList.remove(`ad-form--disabled`);
-    adFormHeader.disabled = false;
-    for (let element of adFormElements) {
-      element.disabled = false;
-    }
-    // Генерация и отрисовка метки
-    const apartments = generateApartments(8);
-    const fragment = document.createDocumentFragment();
+    onFormsActivate();
+  }
+});
 
-    for (let i = 0; i < apartments.length; i++) {
-      fragment.appendChild(renderPin(apartments[i]));
-    }
-    mapPins.appendChild(fragment);
-    // Отрисовка карточки
-    const firstApartment = apartments[0];
-    mapFilterContainer.appendChild(renderCard(firstApartment));
+mainPin.addEventListener(`keydown`, (evt) => {
+  if (evt.key === `Enter`) {
+    onFormsActivate();
   }
 });
 

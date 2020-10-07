@@ -139,6 +139,8 @@ const WIDTH_MAIN_PIN = mainPin.offsetWidth;
 const HEIGHT_MAIN_PIN = mainPin.offsetHeight;
 let locationX = mainPin.style.left.slice(0, -2) - (WIDTH_MAIN_PIN / 2);
 let locationY = mainPin.style.top.slice(0, -2) - (HEIGHT_MAIN_PIN / 2);
+const addressMainPin = document.querySelector(`#address`);
+addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
 
 // Активация сайта по клику главной метки
 const onFormsActivate = () => {
@@ -147,6 +149,7 @@ const onFormsActivate = () => {
   const HEIGHT_MAIN_PIN_ACTIVE = mainPin.offsetHeight;
   locationX = locationX - (WIDTH_MAIN_PIN_ACTIVE / 2);
   locationY = locationY - HEIGHT_MAIN_PIN_ACTIVE;
+  addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
 
   // Убираем отключение активных элементов, написанные выше
   document.querySelector(`.map`).classList.remove(`map--faded`);
@@ -249,4 +252,81 @@ const renderCard = (card) => {
 
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
 
+// Валидация объявления
+// 1) Тип жилья
+const typeApartment = document.querySelector(`#type`);
+const priceApartment = document.querySelector(`#price`);
 
+const onTypeApartmentChange = () => {
+  if (typeApartment.value === `bungalow`) {
+    priceApartment.min = `0`;
+    priceApartment.placeholder = `0`;
+  } else if (typeApartment.value === `flat`) {
+    priceApartment.min = `1000`;
+    priceApartment.placeholder = `1000`;
+  } else if (typeApartment.value === `house`) {
+    priceApartment.min = `5000`;
+    priceApartment.placeholder = `5000`;
+  } else if (typeApartment.value === `palace`) {
+    priceApartment.min = `10000`;
+    priceApartment.placeholder = `10000`;
+  }
+};
+typeApartment.addEventListener(`change`, onTypeApartmentChange);
+onTypeApartmentChange(); // при первом запуске placeholder и тип жилья не совпадает
+// 2) Время заезда и уезда
+const timeInApartment = document.querySelector(`#timein`);
+const timeOutApartment = document.querySelector(`#timeout`);
+
+const onTimeInApartmentChange = () => {
+  if (timeInApartment.value === `12:00`) {
+    timeOutApartment.value = `12:00`;
+  } else if (timeInApartment.value === `13:00`) {
+    timeOutApartment.value = `13:00`;
+  } else if (timeInApartment.value === `14:00`) {
+    timeOutApartment.value = `14:00`;
+  }
+};
+onTimeInApartmentChange();
+timeInApartment.addEventListener(`change`, onTimeInApartmentChange);
+// 3) Количество комнат
+const roomsApartment = document.querySelector(`#room_number`);
+const capacityApartment = document.querySelector(`#capacity`);
+const options = capacityApartment.querySelectorAll(`option`);
+
+const onRoomsApartmentChange = () => {
+  for (let option of options) {
+    option.disabled = false; // Сброс disabled при повторном вызове
+  }
+
+  if (roomsApartment.value === `1`) {
+    for (let option of options) {
+      if (option.value !== `1`) {
+        option.disabled = true;
+      }
+    }
+  } else if (roomsApartment.value === `2`) {
+    for (let option of options) {
+      if (option.value !== `1`
+          && option.value !== `2`) {
+        option.disabled = true;
+      }
+    }
+  } else if (roomsApartment.value === `3`) {
+    for (let option of options) {
+      if (option.value !== `1`
+          && option.value !== `2`
+          && option.value !== `3`) {
+        option.disabled = true;
+      }
+    }
+  } else if (roomsApartment.value === `100`) {
+    for (let option of options) {
+      if (option.value !== `0`) {
+        option.disabled = true;
+      }
+    }
+  }
+};
+onRoomsApartmentChange();
+roomsApartment.addEventListener(`click`, onRoomsApartmentChange);

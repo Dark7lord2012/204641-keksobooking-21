@@ -253,11 +253,12 @@ const renderCard = (card) => {
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
 
 // Валидация объявления
+
 // 1) Тип жилья
 const typeApartment = document.querySelector(`#type`);
 const priceApartment = document.querySelector(`#price`);
 
-const onTypeApartmentChange = () => {
+const setTypeApartment = () => {
   if (typeApartment.value === `bungalow`) {
     priceApartment.min = `0`;
     priceApartment.placeholder = `0`;
@@ -272,13 +273,19 @@ const onTypeApartmentChange = () => {
     priceApartment.placeholder = `10000`;
   }
 };
+
+const onTypeApartmentChange = () => {
+  setTypeApartment();
+};
+
 typeApartment.addEventListener(`change`, onTypeApartmentChange);
-onTypeApartmentChange(); // при первом запуске placeholder и тип жилья не совпадает
+setTypeApartment(); // при первом запуске placeholder и тип жилья не совпадает
+
 // 2) Время заезда и уезда
 const timeInApartment = document.querySelector(`#timein`);
 const timeOutApartment = document.querySelector(`#timeout`);
 
-const onTimeInApartmentChange = () => {
+const setTimeApartment = () => {
   if (timeInApartment.value === `12:00`) {
     timeOutApartment.value = `12:00`;
   } else if (timeInApartment.value === `13:00`) {
@@ -287,46 +294,69 @@ const onTimeInApartmentChange = () => {
     timeOutApartment.value = `14:00`;
   }
 };
-onTimeInApartmentChange();
+
+const onTimeInApartmentChange = () => {
+  setTimeApartment();
+};
+
 timeInApartment.addEventListener(`change`, onTimeInApartmentChange);
+setTimeApartment();
+
 // 3) Количество комнат
 const roomsApartment = document.querySelector(`#room_number`);
 const capacityApartment = document.querySelector(`#capacity`);
 const options = capacityApartment.querySelectorAll(`option`);
 
-const onRoomsApartmentChange = () => {
+const setRoomsApartment = () => {
   for (let option of options) {
     option.disabled = false; // Сброс disabled при повторном вызове
   }
+  let selectedOption;
 
   if (roomsApartment.value === `1`) {
     for (let option of options) {
       if (option.value !== `1`) {
         option.disabled = true;
+        option.selected = false;
+      } else {
+        selectedOption = option;
       }
     }
+    selectedOption.selected = true;
   } else if (roomsApartment.value === `2`) {
     for (let option of options) {
       if (option.value !== `1`
           && option.value !== `2`) {
         option.disabled = true;
+      } else {
+        selectedOption = option;
       }
     }
+    selectedOption.selected = true;
   } else if (roomsApartment.value === `3`) {
     for (let option of options) {
       if (option.value !== `1`
           && option.value !== `2`
           && option.value !== `3`) {
         option.disabled = true;
+      } else {
+        selectedOption = option;
       }
     }
+    selectedOption.selected = true;
   } else if (roomsApartment.value === `100`) {
     for (let option of options) {
       if (option.value !== `0`) {
         option.disabled = true;
+      } else {
+        selectedOption = option;
       }
     }
+    selectedOption.selected = true;
   }
 };
-onRoomsApartmentChange();
+const onRoomsApartmentChange = () => {
+  setRoomsApartment();
+};
 roomsApartment.addEventListener(`click`, onRoomsApartmentChange);
+setRoomsApartment();

@@ -132,9 +132,22 @@ for (let pin of pins) {
   }
 }
 
-// Активация сайта по клику главной метки
+// Координаты (?) и главная метка
+const mainPin = document.querySelector(`.map__pin--main`);
+// Ширина и высота метки в неактивном состоянии
+const WIDTH_MAIN_PIN = mainPin.offsetWidth;
+const HEIGHT_MAIN_PIN = mainPin.offsetHeight;
+let locationX = mainPin.style.left.slice(0, -2) - (WIDTH_MAIN_PIN / 2);
+let locationY = mainPin.style.top.slice(0, -2) - (HEIGHT_MAIN_PIN / 2);
 
+// Активация сайта по клику главной метки
 const onFormsActivate = () => {
+  // Координаты и размеры метки (в активном состоянии)
+  const WIDTH_MAIN_PIN_ACTIVE = mainPin.offsetWidth;
+  const HEIGHT_MAIN_PIN_ACTIVE = mainPin.offsetHeight;
+  locationX = locationX - (WIDTH_MAIN_PIN_ACTIVE / 2);
+  locationY = locationY - HEIGHT_MAIN_PIN_ACTIVE;
+
   // Убираем отключение активных элементов, написанные выше
   document.querySelector(`.map`).classList.remove(`map--faded`);
   mapFeatures.disabled = false;
@@ -160,16 +173,15 @@ const onFormsActivate = () => {
   mapFilterContainer.appendChild(renderCard(firstApartment));
 };
 
-const mainPin = document.querySelector(`.map__pin--main`);
 mainPin.addEventListener(`mousedown`, (evt) => {
   if (evt.button === 0) {
-    onFormsActivate();
+    onFormsActivate(evt);
   }
 });
 
 mainPin.addEventListener(`keydown`, (evt) => {
   if (evt.key === `Enter`) {
-    onFormsActivate();
+    onFormsActivate(evt);
   }
 });
 

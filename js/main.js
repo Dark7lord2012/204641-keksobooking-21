@@ -137,8 +137,8 @@ const mainPin = document.querySelector(`.map__pin--main`);
 // Ширина и высота метки в неактивном состоянии
 const WIDTH_MAIN_PIN = mainPin.offsetWidth;
 const HEIGHT_MAIN_PIN = mainPin.offsetHeight;
-let locationX = mainPin.style.left.slice(0, -2) - (WIDTH_MAIN_PIN / 2);
-let locationY = mainPin.style.top.slice(0, -2) - (HEIGHT_MAIN_PIN / 2);
+let locationX = parseInt(mainPin.style.left, 10) - (WIDTH_MAIN_PIN / 2);
+let locationY = parseInt(mainPin.style.top, 10) - (HEIGHT_MAIN_PIN / 2);
 const addressMainPin = document.querySelector(`#address`);
 addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
 

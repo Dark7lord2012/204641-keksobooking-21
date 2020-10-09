@@ -59,6 +59,15 @@ const getRandomNumber = (min, max) => {
   return Math.round(Math.random() * (max - min) + min);
 };
 
+const removeChildrenNode = (node, except = null) => {
+  while (node.firstChild) {
+    node.removeChild(node.firstChild);
+  }
+  if (except !== null) {
+    node.appendChild(except);
+  }
+};
+
 // Генерация случайных квартир
 const generateApartments = (length) => {
   const apartments = [];
@@ -97,18 +106,33 @@ const generateApartments = (length) => {
 // Первое открытие сайта, когда все отключено и деактивированно
 // // Форма фильтров на карте
 const mapFilters = document.querySelectorAll(`.map__filter`);
-for (let filter of mapFilters) {
-  filter.disabled = true;
-}
 const mapFeatures = document.querySelector(`.map__features`);
-mapFeatures.disabled = true;
-// // Форма объявления
+const pins = document.querySelectorAll(`.map__pin`);
 const adFormHeader = document.querySelector(`.ad-form-header`);
-adFormHeader.disabled = true;
 const adFormElements = document.querySelectorAll(`.ad-form__element`);
-for (let element of adFormElements) {
-  element.disabled = true;
-}
+
+const deactivateForms = () => {
+  // Фильтры меток
+  for (let filter of mapFilters) {
+    filter.disabled = true;
+  }
+  // Метки
+  mapFeatures.disabled = true;
+  for (let pin of pins) {
+    if (!pin.classList.contains(`map__pin--main`)) {
+      pin.disabled = true;
+    }
+  }
+  // Форма объявления
+  adFormHeader.disabled = true;
+  for (let element of adFormElements) {
+    element.disabled = true;
+  }
+};
+
+deactivateForms();
+
+// // Форма объявления
 
 // Отрисовка метки
 const teplatePin = document.querySelector(`#pin`).content.querySelector(`button`);
@@ -124,31 +148,19 @@ const renderPin = (pin) => {
   return pinElement;
 };
 
-// Деактивация меток
-const pins = document.querySelectorAll(`.map__pin`);
-for (let pin of pins) {
-  if (!pin.classList.contains(`map__pin--main`)) {
-    pin.disabled = true;
-  }
-}
-
 // Координаты (?) и главная метка
 const mainPin = document.querySelector(`.map__pin--main`);
-// Ширина и высота метки в неактивном состоянии
-const WIDTH_MAIN_PIN = mainPin.offsetWidth;
-const HEIGHT_MAIN_PIN = mainPin.offsetHeight;
-let locationX = parseInt(mainPin.style.left, 10) - (WIDTH_MAIN_PIN / 2);
-let locationY = parseInt(mainPin.style.top, 10) - (HEIGHT_MAIN_PIN / 2);
+let locationX = parseInt(mainPin.style.left, 10);
+let locationY = parseInt(mainPin.style.top, 10);
 const addressMainPin = document.querySelector(`#address`);
 addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
+mainPin.style.transform = `translate(-50%, -50%)`;
+mainPin.style.transition = `0.2s`; // Слишком резкий переход без него
 
 // Активация сайта по клику главной метки
-const onFormsActivate = () => {
+const activateForms = () => {
   // Координаты и размеры метки (в активном состоянии)
-  const WIDTH_MAIN_PIN_ACTIVE = mainPin.offsetWidth;
-  const HEIGHT_MAIN_PIN_ACTIVE = mainPin.offsetHeight;
-  locationX = locationX - (WIDTH_MAIN_PIN_ACTIVE / 2);
-  locationY = locationY - HEIGHT_MAIN_PIN_ACTIVE;
+  mainPin.style.transform = `translate(-50%, -100%)`;
   addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
 
   // Убираем отключение активных элементов, написанные выше
@@ -170,23 +182,28 @@ const onFormsActivate = () => {
   for (let i = 0; i < apartments.length; i++) {
     fragment.appendChild(renderPin(apartments[i]));
   }
+
+  removeChildrenNode(mapPins, mainPin); // Очистка от старых меток
   mapPins.appendChild(fragment);
   // Отрисовка карточки
   const firstApartment = apartments[0];
   mapFilterContainer.appendChild(renderCard(firstApartment));
 };
 
-mainPin.addEventListener(`mousedown`, (evt) => {
+const onFormsActivateMousedown = (evt) => {
   if (evt.button === 0) {
-    onFormsActivate(evt);
+    activateForms();
   }
-});
+};
 
-mainPin.addEventListener(`keydown`, (evt) => {
+const onFormsActivateKeydown = (evt) => {
   if (evt.key === `Enter`) {
-    onFormsActivate(evt);
+    activateForms();
   }
-});
+};
+
+mainPin.addEventListener(`mousedown`, onFormsActivateMousedown);
+mainPin.addEventListener(`keydown`, onFormsActivateKeydown);
 
 // Генерация объявления
 
@@ -216,9 +233,7 @@ const renderCard = (card) => {
   const popupFeatures = cardElement.querySelector(`.popup__features`);
   const feature = cardElement.querySelector(`.popup__feature`);
 
-  while (popupFeatures.firstChild) {
-    popupFeatures.removeChild(popupFeatures.firstChild);
-  }
+  removeChildrenNode(popupFeatures);
 
   for (let i = 0; i < card.offer.features.length; i++) {
     const featureElement = feature.cloneNode(true);

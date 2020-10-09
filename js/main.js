@@ -152,12 +152,12 @@ let locationX = parseInt(mainPin.style.left, 10);
 let locationY = parseInt(mainPin.style.top, 10);
 const addressMainPin = document.querySelector(`#address`);
 addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
-mainPin.style.transform = `translate(-50%, -50%)`;
+mainPin.style.transform = `translate(50%, 50%)`;
 
 // Активация сайта по клику главной метки
 const activateForms = () => {
   // Координаты и размеры метки (в активном состоянии)
-  mainPin.style.transform = `translate(-50%, -100%)`;
+  mainPin.style.transform = `translate(50%, 100%)`;
   addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
 
   // Убираем отключение активных элементов, написанные выше

@@ -38,7 +38,7 @@ const CHECHKOUT = [
 ];
 
 const FEATURES = [
-  `wi-fi`,
+  `wifi`,
   `dishwasher`,
   `parking`,
   `washer`,
@@ -131,8 +131,6 @@ const deactivateForms = () => {
 };
 
 deactivateForms();
-
-// // Форма объявления
 
 // Отрисовка метки
 const teplatePin = document.querySelector(`#pin`).content.querySelector(`button`);
@@ -258,7 +256,6 @@ const renderCard = (card) => {
     popupPhotos.appendChild(photoElement);
   }
 
-
   const popupAvatar = cardElement.querySelector(`.popup__avatar`);
   popupAvatar.src = card.author.avatar;
 
@@ -268,7 +265,6 @@ const renderCard = (card) => {
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
 
 // Валидация объявления
-
 // 1) Тип жилья
 const typeApartment = document.querySelector(`#type`);
 const priceApartment = document.querySelector(`#price`);
@@ -300,7 +296,7 @@ setTypeApartment(); // при первом запуске placeholder и тип 
 const timeInApartment = document.querySelector(`#timein`);
 const timeOutApartment = document.querySelector(`#timeout`);
 
-const setTimeApartment = () => {
+const setTimeInApartment = () => {
   if (timeInApartment.value === `12:00`) {
     timeOutApartment.value = `12:00`;
   } else if (timeInApartment.value === `13:00`) {
@@ -310,12 +306,27 @@ const setTimeApartment = () => {
   }
 };
 
+const setTimeOutApartment = () => {
+  if (timeOutApartment.value === `12:00`) {
+    timeInApartment.value = `12:00`;
+  } else if (timeOutApartment.value === `13:00`) {
+    timeInApartment.value = `13:00`;
+  } else if (timeOutApartment.value === `14:00`) {
+    timeInApartment.value = `14:00`;
+  }
+};
+
 const onTimeInApartmentChange = () => {
-  setTimeApartment();
+  setTimeInApartment();
+};
+const onTimeOutApartmentChange = () => {
+  setTimeOutApartment();
 };
 
 timeInApartment.addEventListener(`change`, onTimeInApartmentChange);
-setTimeApartment();
+timeOutApartment.addEventListener(`change`, onTimeOutApartmentChange);
+setTimeInApartment();
+setTimeOutApartment();
 
 // 3) Количество комнат
 const roomsApartment = document.querySelector(`#room_number`);

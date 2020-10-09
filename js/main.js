@@ -46,6 +46,12 @@ const FEATURES = [
   `conditioner`
 ];
 
+const PHOTOS = [
+  `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
+  `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
+  `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
+];
+
 let mapPins = document.querySelector(`.map__pins`);
 let mapWidth = (document.querySelector(`.map__overlay`).offsetWidth - 20); // 20 - ширина полоски для прокрутки (предполагается)
 const MAP_RANGE_TOP = 130;
@@ -57,6 +63,16 @@ const randomElementArray = (array) => {
 
 const getRandomNumber = (min, max) => {
   return Math.round(Math.random() * (max - min) + min);
+};
+
+const getRandomArray = (array, length = getRandomNumber(0, array.length - 1)) => {
+  const newArray = array;
+  for (let i = newArray.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1)); // Алгоритм Фишера-Йетса
+    [array[i], array[j]] = [array[j], array[i]]; // Почитать в MDN про деструктурируещее присваивание (!)
+  }
+
+  return newArray.slice(0, length);
 };
 
 const removeChildrenNode = (node, except = null) => {
@@ -86,13 +102,9 @@ const generateApartments = (length) => {
         guests: getRandomNumber(1, 2),
         checkin: randomElementArray(CHECHKIN),
         checkout: randomElementArray(CHECHKOUT),
-        features: [randomElementArray(FEATURES), randomElementArray(FEATURES), randomElementArray(FEATURES)],
+        features: getRandomArray(FEATURES),
         description: null,
-        photos: [
-          `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
-          `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
-          `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
-        ]
+        photos: getRandomArray(PHOTOS)
       },
       location: {
         x: getRandomNumber(0, mapWidth),

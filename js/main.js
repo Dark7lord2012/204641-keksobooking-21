@@ -384,5 +384,5 @@ const setRoomsApartment = () => {
 const onRoomsApartmentChange = () => {
   setRoomsApartment();
 };
-roomsApartment.addEventListener(`click`, onRoomsApartmentChange);
+roomsApartment.addEventListener(`change`, onRoomsApartmentChange);
 setRoomsApartment();

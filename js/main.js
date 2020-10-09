@@ -153,7 +153,6 @@ let locationY = parseInt(mainPin.style.top, 10);
 const addressMainPin = document.querySelector(`#address`);
 addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
 mainPin.style.transform = `translate(-50%, -50%)`;
-mainPin.style.transition = `0.2s`; // Слишком резкий переход без него
 
 // Активация сайта по клику главной метки
 const activateForms = () => {
@@ -191,12 +190,17 @@ const activateForms = () => {
 const onFormsActivateMousedown = (evt) => {
   if (evt.button === 0) {
     activateForms();
+    mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
+    mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
   }
 };
+
 
 const onFormsActivateKeydown = (evt) => {
   if (evt.key === `Enter`) {
     activateForms();
+    mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
+    mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
   }
 };
 

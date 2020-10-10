@@ -38,12 +38,18 @@ const CHECHKOUT = [
 ];
 
 const FEATURES = [
-  `wi-fi`,
+  `wifi`,
   `dishwasher`,
   `parking`,
   `washer`,
   `elevator`,
   `conditioner`
+];
+
+const PHOTOS = [
+  `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
+  `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
+  `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
 let mapPins = document.querySelector(`.map__pins`);
@@ -57,6 +63,25 @@ const randomElementArray = (array) => {
 
 const getRandomNumber = (min, max) => {
   return Math.round(Math.random() * (max - min) + min);
+};
+
+const getRandomArray = (array, length = getRandomNumber(0, array.length - 1)) => {
+  const newArray = array;
+  for (let i = newArray.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1)); // Алгоритм Фишера-Йетса
+    [array[i], array[j]] = [array[j], array[i]]; // Почитать в MDN про деструктурируещее присваивание (!)
+  }
+
+  return newArray.slice(0, length);
+};
+
+const removeChildrenNode = (node, except = null) => {
+  while (node.firstChild) {
+    node.removeChild(node.firstChild);
+  }
+  if (except !== null) {
+    node.appendChild(except);
+  }
 };
 
 // Генерация случайных квартир
@@ -77,13 +102,9 @@ const generateApartments = (length) => {
         guests: getRandomNumber(1, 2),
         checkin: randomElementArray(CHECHKIN),
         checkout: randomElementArray(CHECHKOUT),
-        features: [randomElementArray(FEATURES), randomElementArray(FEATURES), randomElementArray(FEATURES)],
+        features: getRandomArray(FEATURES),
         description: null,
-        photos: [
-          `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
-          `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
-          `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
-        ]
+        photos: getRandomArray(PHOTOS)
       },
       location: {
         x: getRandomNumber(0, mapWidth),
@@ -94,7 +115,34 @@ const generateApartments = (length) => {
   return apartments;
 };
 
-document.querySelector(`.map`).classList.remove(`map--faded`);
+// Первое открытие сайта, когда все отключено и деактивированно
+// // Форма фильтров на карте
+const mapFilters = document.querySelectorAll(`.map__filter`);
+const mapFeatures = document.querySelector(`.map__features`);
+const pins = document.querySelectorAll(`.map__pin`);
+const adFormHeader = document.querySelector(`.ad-form-header`);
+const adFormElements = document.querySelectorAll(`.ad-form__element`);
+
+const deactivateForms = () => {
+  // Фильтры меток
+  for (let filter of mapFilters) {
+    filter.disabled = true;
+  }
+  // Метки
+  mapFeatures.disabled = true;
+  for (let pin of pins) {
+    if (!pin.classList.contains(`map__pin--main`)) {
+      pin.disabled = true;
+    }
+  }
+  // Форма объявления
+  adFormHeader.disabled = true;
+  for (let element of adFormElements) {
+    element.disabled = true;
+  }
+};
+
+deactivateForms();
 
 // Отрисовка метки
 const teplatePin = document.querySelector(`#pin`).content.querySelector(`button`);
@@ -110,18 +158,71 @@ const renderPin = (pin) => {
   return pinElement;
 };
 
-const apartments = generateApartments(8);
+// Координаты (?) и главная метка
+const mainPin = document.querySelector(`.map__pin--main`);
+let locationX = parseInt(mainPin.style.left, 10);
+let locationY = parseInt(mainPin.style.top, 10);
+const addressMainPin = document.querySelector(`#address`);
+const widthMainPin = mainPin.offsetWidth;
+const heightMainPin = mainPin.offsetHeight;
+addressMainPin.value = `${Math.round(locationX + (widthMainPin / 2))}, ${Math.round(locationY + (heightMainPin / 2))}`;
 
-const fragment = document.createDocumentFragment();
-for (let i = 0; i < apartments.length; i++) {
-  fragment.appendChild(renderPin(apartments[i]));
-}
-mapPins.appendChild(fragment);
+// Активация сайта по клику главной метки
+const activateForms = () => {
+  // Координаты и размеры метки (в активном состоянии)
+  mainPin.style.transform = `translateY(-100%)`;
+  // addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
+
+  // Убираем отключение активных элементов, написанные выше
+  document.querySelector(`.map`).classList.remove(`map--faded`);
+  mapFeatures.disabled = false;
+  for (let filter of mapFilters) {
+    filter.disabled = false;
+  }
+  const adForm = document.querySelector(`.ad-form`);
+  adForm.classList.remove(`ad-form--disabled`);
+  adFormHeader.disabled = false;
+  for (let element of adFormElements) {
+    element.disabled = false;
+  }
+  // Генерация и отрисовка метки
+  const apartments = generateApartments(8);
+  const fragment = document.createDocumentFragment();
+
+  for (let i = 0; i < apartments.length; i++) {
+    fragment.appendChild(renderPin(apartments[i]));
+  }
+
+  removeChildrenNode(mapPins, mainPin); // Очистка от старых меток
+  mapPins.appendChild(fragment);
+  // Отрисовка карточки
+  const firstApartment = apartments[0];
+  mapFilterContainer.appendChild(renderCard(firstApartment));
+};
+
+const onFormsActivateMousedown = (evt) => {
+  if (evt.button === 0) {
+    activateForms();
+    mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
+    mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
+  }
+};
+
+
+const onFormsActivateKeydown = (evt) => {
+  if (evt.key === `Enter`) {
+    activateForms();
+    mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
+    mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
+  }
+};
+
+mainPin.addEventListener(`mousedown`, onFormsActivateMousedown);
+mainPin.addEventListener(`keydown`, onFormsActivateKeydown);
 
 // Генерация объявления
-const firstApartment = apartments[0];
-const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 
+const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 const renderCard = (card) => {
   const cardElement = templateCard.cloneNode(true);
 
@@ -147,9 +248,7 @@ const renderCard = (card) => {
   const popupFeatures = cardElement.querySelector(`.popup__features`);
   const feature = cardElement.querySelector(`.popup__feature`);
 
-  while (popupFeatures.firstChild) {
-    popupFeatures.removeChild(popupFeatures.firstChild);
-  }
+  removeChildrenNode(popupFeatures);
 
   for (let i = 0; i < card.offer.features.length; i++) {
     const featureElement = feature.cloneNode(true);
@@ -174,7 +273,6 @@ const renderCard = (card) => {
     popupPhotos.appendChild(photoElement);
   }
 
-
   const popupAvatar = cardElement.querySelector(`.popup__avatar`);
   popupAvatar.src = card.author.avatar;
 
@@ -182,4 +280,126 @@ const renderCard = (card) => {
 };
 
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
-mapFilterContainer.appendChild(renderCard(firstApartment));
+
+// Валидация объявления
+// 1) Тип жилья
+const typeApartment = document.querySelector(`#type`);
+const priceApartment = document.querySelector(`#price`);
+
+const setTypeApartment = () => {
+  if (typeApartment.value === `bungalow`) {
+    priceApartment.min = `0`;
+    priceApartment.placeholder = `0`;
+  } else if (typeApartment.value === `flat`) {
+    priceApartment.min = `1000`;
+    priceApartment.placeholder = `1000`;
+  } else if (typeApartment.value === `house`) {
+    priceApartment.min = `5000`;
+    priceApartment.placeholder = `5000`;
+  } else if (typeApartment.value === `palace`) {
+    priceApartment.min = `10000`;
+    priceApartment.placeholder = `10000`;
+  }
+};
+
+const onTypeApartmentChange = () => {
+  setTypeApartment();
+};
+
+typeApartment.addEventListener(`change`, onTypeApartmentChange);
+setTypeApartment(); // при первом запуске placeholder и тип жилья не совпадает
+
+// 2) Время заезда и уезда
+const timeInApartment = document.querySelector(`#timein`);
+const timeOutApartment = document.querySelector(`#timeout`);
+
+const setTimeInApartment = () => {
+  if (timeInApartment.value === `12:00`) {
+    timeOutApartment.value = `12:00`;
+  } else if (timeInApartment.value === `13:00`) {
+    timeOutApartment.value = `13:00`;
+  } else if (timeInApartment.value === `14:00`) {
+    timeOutApartment.value = `14:00`;
+  }
+};
+
+const setTimeOutApartment = () => {
+  if (timeOutApartment.value === `12:00`) {
+    timeInApartment.value = `12:00`;
+  } else if (timeOutApartment.value === `13:00`) {
+    timeInApartment.value = `13:00`;
+  } else if (timeOutApartment.value === `14:00`) {
+    timeInApartment.value = `14:00`;
+  }
+};
+
+const onTimeInApartmentChange = () => {
+  setTimeInApartment();
+};
+const onTimeOutApartmentChange = () => {
+  setTimeOutApartment();
+};
+
+timeInApartment.addEventListener(`change`, onTimeInApartmentChange);
+timeOutApartment.addEventListener(`change`, onTimeOutApartmentChange);
+setTimeInApartment();
+setTimeOutApartment();
+
+// 3) Количество комнат
+const roomsApartment = document.querySelector(`#room_number`);
+const capacityApartment = document.querySelector(`#capacity`);
+const options = capacityApartment.querySelectorAll(`option`);
+
+const setRoomsApartment = () => {
+  for (let option of options) {
+    option.disabled = false; // Сброс disabled при повторном вызове
+  }
+  let selectedOption;
+
+  if (roomsApartment.value === `1`) {
+    for (let option of options) {
+      if (option.value !== `1`) {
+        option.disabled = true;
+        option.selected = false;
+      } else {
+        selectedOption = option;
+      }
+    }
+    selectedOption.selected = true;
+  } else if (roomsApartment.value === `2`) {
+    for (let option of options) {
+      if (option.value !== `1`
+          && option.value !== `2`) {
+        option.disabled = true;
+      } else {
+        selectedOption = option;
+      }
+    }
+    selectedOption.selected = true;
+  } else if (roomsApartment.value === `3`) {
+    for (let option of options) {
+      if (option.value !== `1`
+          && option.value !== `2`
+          && option.value !== `3`) {
+        option.disabled = true;
+      } else {
+        selectedOption = option;
+      }
+    }
+    selectedOption.selected = true;
+  } else if (roomsApartment.value === `100`) {
+    for (let option of options) {
+      if (option.value !== `0`) {
+        option.disabled = true;
+      } else {
+        selectedOption = option;
+      }
+    }
+    selectedOption.selected = true;
+  }
+};
+const onRoomsApartmentChange = () => {
+  setRoomsApartment();
+};
+roomsApartment.addEventListener(`change`, onRoomsApartmentChange);
+setRoomsApartment();

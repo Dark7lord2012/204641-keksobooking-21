@@ -171,8 +171,6 @@ addressMainPin.value = `${Math.round(locationX + (widthMainPin / 2))}, ${Math.ro
 const activateForms = () => {
   // Координаты и размеры метки (в активном состоянии)
   mainPin.style.transform = `translateY(-100%)`;
-  // addressMainPin.value = `${Math.round(locationX)}, ${Math.round(locationY)}`;
-
   // Убираем отключение активных элементов, написанные выше
   document.querySelector(`.map`).classList.remove(`map--faded`);
   mapFeatures.disabled = false;
@@ -190,14 +188,31 @@ const activateForms = () => {
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < apartments.length; i++) {
-    fragment.appendChild(renderPin(apartments[i]));
+    const pin = apartments[i];
+    const pinElement = renderPin(pin);
+    fragment.appendChild(pinElement);
+    pinElement.addEventListener(`click`, () => {
+      const card = renderCard(pin);
+      // removeChildrenNode(map, mainPin);
+      const oldCard = document.querySelector(`.popup`);
+      if (oldCard) {
+        map.removeChild(oldCard);
+      }
+      map.insertBefore(card, mapFilterContainer);
+      const btnCloseCard = card.querySelector(`.popup__close`);
+      btnCloseCard.addEventListener(`click`, () => {
+        map.removeChild(card);
+      });
+      document.addEventListener(`keydown`, (evt) => {
+        if (evt.key === `Escape`) {
+          map.removeChild(card);
+        }
+      });
+    });
   }
 
   removeChildrenNode(mapPins, mainPin); // Очистка от старых меток
   mapPins.appendChild(fragment);
-  // Отрисовка карточки
-  const firstApartment = apartments[0];
-  mapFilterContainer.appendChild(renderCard(firstApartment));
 };
 
 const onFormsActivateMousedown = (evt) => {
@@ -207,7 +222,6 @@ const onFormsActivateMousedown = (evt) => {
     mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
   }
 };
-
 
 const onFormsActivateKeydown = (evt) => {
   if (evt.key === `Enter`) {
@@ -279,7 +293,28 @@ const renderCard = (card) => {
   return cardElement;
 };
 
+// const showCardPopup = (pin) => {
+//   const card = renderCard(pin);
+//   removeChildrenNode(mapFilterContainer, mainPin);
+//   mapFilterContainer.appendChild(card);
+// };
+
+// const closeCardPopup = (card) => {
+//   mapFilterContainer.removeChild(card);
+// };
+
+const onCardPopupPressEsc = (evt) => {
+  if (evt.key === `Escape`) {
+    mapFilterContainer.removeChild(evt.target);
+  }
+};
+
+// const onCardPopupClick = () => {
+//   openCardPopup();
+// };
+
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
+const map = document.querySelector(`.map`);
 
 // Валидация объявления
 // 1) Тип жилья

@@ -191,24 +191,7 @@ const activateForms = () => {
     const pin = apartments[i];
     const pinElement = renderPin(pin);
     fragment.appendChild(pinElement);
-    pinElement.addEventListener(`click`, () => {
-      const card = renderCard(pin);
-      // removeChildrenNode(map, mainPin);
-      const oldCard = document.querySelector(`.popup`);
-      if (oldCard) {
-        map.removeChild(oldCard);
-      }
-      map.insertBefore(card, mapFilterContainer);
-      const btnCloseCard = card.querySelector(`.popup__close`);
-      btnCloseCard.addEventListener(`click`, () => {
-        map.removeChild(card);
-      });
-      document.addEventListener(`keydown`, (evt) => {
-        if (evt.key === `Escape`) {
-          map.removeChild(card);
-        }
-      });
-    });
+    pinElement.addEventListener(`click`, onPinClick); // ????
   }
 
   removeChildrenNode(mapPins, mainPin); // Очистка от старых меток
@@ -293,21 +276,41 @@ const renderCard = (card) => {
   return cardElement;
 };
 
-// const showCardPopup = (pin) => {
-//   const card = renderCard(pin);
-//   removeChildrenNode(mapFilterContainer, mainPin);
-//   mapFilterContainer.appendChild(card);
-// };
+let card;
 
-// const closeCardPopup = (card) => {
-//   mapFilterContainer.removeChild(card);
-// };
-
-const onCardPopupPressEsc = (evt) => {
-  if (evt.key === `Escape`) {
-    mapFilterContainer.removeChild(evt.target);
+const showCardPopup = (pin) => {
+  card = renderCard(pin);
+  const oldCard = document.querySelector(`.popup`);
+  if (oldCard) {
+    closeCardPopup();
   }
+  map.insertBefore(card, mapFilterContainer);
+  const btnCloseCard = card.querySelector(`.popup__close`);
+  btnCloseCard.addEventListener(`click`, () => {
+    map.removeChild(card);
+  });
+  document.addEventListener(`keydown`, (evt) => {
+    if (evt.key === `Escape`) {
+      map.removeChild(card);
+    }
+  });
 };
+
+// ???
+const onPinClick = (evt) => {
+  showCardPopup(evt.target);
+};
+
+const closeCardPopup = () => {
+  card.remove();
+  card.removeEventListener(`click`, onPinClick);
+};
+
+// const onCardPopupPressEsc = (evt) => {
+//   if (evt.key === `Escape`) {
+//     mapFilterContainer.removeChild(evt.target);
+//   }
+// };
 
 // const onCardPopupClick = () => {
 //   openCardPopup();

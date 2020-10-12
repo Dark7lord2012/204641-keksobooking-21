@@ -193,7 +193,7 @@ const activateForms = () => {
     fragment.appendChild(pinElement);
     pinElement.addEventListener(`click`, () => {
       showCardPopup(pin);
-    }); // ????
+    });
   }
 
   removeChildrenNode(mapPins, mainPin); // Очистка от старых меток

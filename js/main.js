@@ -191,7 +191,9 @@ const activateForms = () => {
     const pin = apartments[i];
     const pinElement = renderPin(pin);
     fragment.appendChild(pinElement);
-    pinElement.addEventListener(`click`, onPinClick); // ????
+    pinElement.addEventListener(`click`, () => {
+      showCardPopup(pin);
+    }); // ????
   }
 
   removeChildrenNode(mapPins, mainPin); // Очистка от старых меток
@@ -278,6 +280,16 @@ const renderCard = (card) => {
 
 let card;
 
+const onBtnCloseCardClick = () => {
+  map.removeChild(card);
+};
+
+const onCardPopupKeydown = (evt) => {
+  if (evt.key === `Escape`) {
+    map.removeChild(card);
+  }
+};
+
 const showCardPopup = (pin) => {
   card = renderCard(pin);
   const oldCard = document.querySelector(`.popup`);
@@ -286,35 +298,16 @@ const showCardPopup = (pin) => {
   }
   map.insertBefore(card, mapFilterContainer);
   const btnCloseCard = card.querySelector(`.popup__close`);
-  btnCloseCard.addEventListener(`click`, () => {
-    map.removeChild(card);
-  });
-  document.addEventListener(`keydown`, (evt) => {
-    if (evt.key === `Escape`) {
-      map.removeChild(card);
-    }
-  });
-};
-
-// ???
-const onPinClick = (evt) => {
-  showCardPopup(evt.target);
+  btnCloseCard.addEventListener(`click`, onBtnCloseCardClick);
+  document.addEventListener(`keydown`, onCardPopupKeydown);
 };
 
 const closeCardPopup = () => {
   card.remove();
-  card.removeEventListener(`click`, onPinClick);
+  document.removeEventListener(`keydown`, onCardPopupKeydown);
+  const btnCloseCard = card.querySelector(`.popup__close`);
+  btnCloseCard.removeEventListener(`click`, onBtnCloseCardClick);
 };
-
-// const onCardPopupPressEsc = (evt) => {
-//   if (evt.key === `Escape`) {
-//     mapFilterContainer.removeChild(evt.target);
-//   }
-// };
-
-// const onCardPopupClick = () => {
-//   openCardPopup();
-// };
 
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
 const map = document.querySelector(`.map`);

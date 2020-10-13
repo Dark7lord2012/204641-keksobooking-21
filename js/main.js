@@ -278,16 +278,12 @@ const renderCard = (card) => {
   return cardElement;
 };
 
-// let card;
-
 const onBtnCloseCardClick = () => {
-  // map.removeChild(card);
   closeCardPopup();
 };
 
 const onCardPopupKeydown = (evt) => {
   if (evt.key === `Escape`) {
-    // map.removeChild(card);
     closeCardPopup();
   }
 };
@@ -309,7 +305,6 @@ const closeCardPopup = () => {
   if (oldCard) {
     map.removeChild(oldCard);
   }
-  // card.remove();
   document.removeEventListener(`keydown`, onCardPopupKeydown);
   const btnCloseCard = card.querySelector(`.popup__close`);
   btnCloseCard.removeEventListener(`click`, onBtnCloseCardClick);

@@ -306,7 +306,7 @@ const closeCardPopup = () => {
     map.removeChild(oldCard);
   }
   document.removeEventListener(`keydown`, onCardPopupKeydown);
-  const btnCloseCard = card.querySelector(`.popup__close`);
+  const btnCloseCard = document.querySelector(`.popup__close`);
   btnCloseCard.removeEventListener(`click`, onBtnCloseCardClick);
 };
 

@@ -158,7 +158,7 @@ const renderPin = (pin) => {
   return pinElement;
 };
 
-// Координаты (?) и главная метка
+// Координаты и главная метка
 const mainPin = document.querySelector(`.map__pin--main`);
 let locationX = parseInt(mainPin.style.left, 10);
 let locationY = parseInt(mainPin.style.top, 10);
@@ -278,20 +278,22 @@ const renderCard = (card) => {
   return cardElement;
 };
 
-let card;
+// let card;
 
 const onBtnCloseCardClick = () => {
-  map.removeChild(card);
+  // map.removeChild(card);
+  closeCardPopup();
 };
 
 const onCardPopupKeydown = (evt) => {
   if (evt.key === `Escape`) {
-    map.removeChild(card);
+    // map.removeChild(card);
+    closeCardPopup();
   }
 };
 
 const showCardPopup = (pin) => {
-  card = renderCard(pin);
+  const card = renderCard(pin);
   const oldCard = document.querySelector(`.popup`);
   if (oldCard) {
     closeCardPopup();
@@ -303,7 +305,11 @@ const showCardPopup = (pin) => {
 };
 
 const closeCardPopup = () => {
-  card.remove();
+  const oldCard = document.querySelector(`.popup`);
+  if (oldCard) {
+    map.removeChild(oldCard);
+  }
+  // card.remove();
   document.removeEventListener(`keydown`, onCardPopupKeydown);
   const btnCloseCard = card.querySelector(`.popup__close`);
   btnCloseCard.removeEventListener(`click`, onBtnCloseCardClick);

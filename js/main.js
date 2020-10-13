@@ -301,13 +301,13 @@ const showCardPopup = (pin) => {
 };
 
 const closeCardPopup = () => {
+  document.removeEventListener(`keydown`, onCardPopupKeydown);
+  const btnCloseCard = document.querySelector(`.popup__close`);
+  btnCloseCard.removeEventListener(`click`, onBtnCloseCardClick);
   const oldCard = document.querySelector(`.popup`);
   if (oldCard) {
     map.removeChild(oldCard);
   }
-  document.removeEventListener(`keydown`, onCardPopupKeydown);
-  const btnCloseCard = document.querySelector(`.popup__close`);
-  btnCloseCard.removeEventListener(`click`, onBtnCloseCardClick);
 };
 
 const mapFilterContainer = document.querySelector(`.map__filters-container`);

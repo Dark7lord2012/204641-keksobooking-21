@@ -15,7 +15,6 @@
   const mapFeatures = window.map.mapFeatures;
   const adFormHeader = window.map.adFormHeader;
   const adFormElements = window.map.adFormElements;
-  const generateApartments = window.data.generateApartments;
   const mapPins = window.data.mapPins;
   const showCardPopup = window.card.showCardPopup;
 
@@ -46,21 +45,39 @@
       element.disabled = false;
     }
     // Генерация и отрисовка метки
-    const apartments = generateApartments(8);
+    const successHandler = (apartments) => {
+      for (let i = 0; i < apartments.length; i++) {
+        const pin = apartments[i];
+        const pinElement = renderPin(pin);
+        fragment.appendChild(pinElement);
+
+        pinElement.addEventListener(`click`, () => {
+          showCardPopup(pin);
+        });
+      }
+
+      removeChildrenNode(mapPins, mainPin); // Очистка от старых меток
+      mapPins.appendChild(fragment);
+    };
+
+    const errorHandler = (errorMessage) => {
+      const node = document.createElement(`div`);
+
+      node.style = `z-index: 100; margin: 0 auto; text-align: center; background-color: rgba(240, 0, 0, 0.3);`;
+      node.style.position = `absolute`;
+      node.style.left = 0;
+      node.style.right = 0;
+      node.style.color = `white`;
+      node.style.fontSize = `20px`;
+
+      node.textContent = errorMessage;
+      document.body.insertAdjacentElement(`afterbegin`, node);
+    };
+
     const fragment = document.createDocumentFragment();
-
-    for (let i = 0; i < apartments.length; i++) {
-      const pin = apartments[i];
-      const pinElement = renderPin(pin);
-      fragment.appendChild(pinElement);
-      pinElement.addEventListener(`click`, () => {
-        showCardPopup(pin);
-      });
-    }
-
-    removeChildrenNode(mapPins, mainPin); // Очистка от старых меток
-    mapPins.appendChild(fragment);
+    window.network.upload(successHandler, errorHandler);
   };
+
 
   const onFormsActivateMousedown = (evt) => {
     if (evt.button === 0) {

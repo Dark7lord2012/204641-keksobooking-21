@@ -15,7 +15,6 @@
   const mapFeatures = window.map.mapFeatures;
   const adFormHeader = window.map.adFormHeader;
   const adFormElements = window.map.adFormElements;
-  const generateApartments = window.data.generateApartments;
   const mapPins = window.data.mapPins;
   const showCardPopup = window.card.showCardPopup;
 
@@ -46,15 +45,12 @@
       element.disabled = false;
     }
     // Генерация и отрисовка метки
-    // const apartments = generateApartments(8);
-
-    // console.log(apartments);
-
     const successHandler = (apartments) => {
       for (let i = 0; i < apartments.length; i++) {
         const pin = apartments[i];
         const pinElement = renderPin(pin);
         fragment.appendChild(pinElement);
+
         pinElement.addEventListener(`click`, () => {
           showCardPopup(pin);
         });

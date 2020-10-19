@@ -46,6 +46,11 @@
     }
     // Генерация и отрисовка метки
     const successHandler = (apartments) => {
+      let data = apartments;
+      // Отфильтрование квартир по типа и ограничение размера
+      let filtered = window.filter.filterType(data);
+      apartments = filtered.slice(0, 5);
+
       for (let i = 0; i < apartments.length; i++) {
         const pin = apartments[i];
         const pinElement = renderPin(pin);

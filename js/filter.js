@@ -12,17 +12,11 @@
         return apartment.offer.type === housingType.value;
       });
 
-      filtered = filtered.concat(apartments);
-      const result = filtered.filter((apartment, index) => {
-        return filtered.indexOf(apartment) === index;
-      });
+      const result = filtered.slice(0, 5);
       return result;
     }
 
-    filtered = filtered.concat(apartments);
-    const result = filtered.filter((apartment, index) => {
-      return filtered.indexOf(apartment) === index;
-    });
+    const result = filtered.slice(0, 5);
     return result;
   };
 

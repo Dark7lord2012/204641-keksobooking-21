@@ -3,12 +3,12 @@
 (() => {
   const templatePin = document.querySelector(`#pin`).content.querySelector(`button`);
   const mainPin = document.querySelector(`.map__pin--main`);
-  let locationX = parseInt(mainPin.style.left, 10);
-  let locationY = parseInt(mainPin.style.top, 10);
+  // let locationX = parseInt(mainPin.style.left, 10);
+  // let locationY = parseInt(mainPin.style.top, 10);
   const addressMainPin = document.querySelector(`#address`);
-  const widthMainPin = mainPin.offsetWidth;
-  const heightMainPin = mainPin.offsetHeight;
-  addressMainPin.value = `${Math.round(locationX + (widthMainPin / 2))}, ${Math.round(locationY + (heightMainPin / 2))}`;
+  // const widthMainPin = mainPin.offsetWidth;
+  // const heightMainPin = mainPin.offsetHeight;
+  // addressMainPin.value = `${Math.round(locationX + (widthMainPin / 2))}, ${Math.round(locationY + (heightMainPin / 2))}`;
 
   const removeChildrenNode = window.data.removeChildrenNode;
   const mapFilters = window.map.mapFilters;
@@ -20,6 +20,16 @@
   const MAP_RANGE_TOP = window.data.MAP_RANGE_TOP;
   const MAP_RANGE_BOTTOM = window.data.MAP_RANGE_BOTTOM;
   const mapWidth = window.data.mapWidth;
+
+  const calculateAddress = (pin, inputAddress) => {
+    const x = parseInt(pin.style.left, 10);
+    const y = parseInt(pin.style.top, 10);
+    const widthPin = pin.offsetWidth;
+    const heightPin = pin.offsetHeight;
+    inputAddress.value = `${Math.round(x + (widthPin / 2))}, ${Math.round(y + (heightPin / 2))}`;
+  };
+
+  calculateAddress(mainPin, addressMainPin);
 
   const renderPin = (pin) => {
     let pinElement = templatePin.cloneNode(true);
@@ -33,7 +43,7 @@
   };
 
   const activateForms = () => {
-    // Координаты и размеры метки (в активном состоянии)
+    // Координата теперь не в середине, а в остром конце метки
     mainPin.style.transform = `translateY(-100%)`;
     // Убираем отключение активных элементов, написанные выше
     document.querySelector(`.map`).classList.remove(`map--faded`);
@@ -130,6 +140,7 @@
         document.removeEventListener(`mouseup`, onMouseUp);
         // mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
         // mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
+        calculateAddress(mainPin, addressMainPin);
       };
       document.addEventListener(`mousemove`, onMouseMove);
       document.addEventListener(`mouseup`, onMouseUp);

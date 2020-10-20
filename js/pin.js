@@ -83,12 +83,40 @@
     window.network.upload(successHandler, errorHandler);
   };
 
-
+  // Активация форм по нажатию
   const onFormsActivateMousedown = (evt) => {
     if (evt.button === 0) {
-      activateForms();
-      mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
-      mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
+
+
+      let startCoords = {
+        x: evt.clientX,
+        y: evt.clientY
+      };
+      const onMouseMove = (moveEvt) => {
+
+        let shift = {
+          x: startCoords.x - moveEvt.clientX,
+          y: startCoords.y - moveEvt.clientY
+        };
+
+        startCoords = {
+          x: moveEvt.clientX,
+          y: moveEvt.clientY
+        };
+
+        mainPin.style.top = `${mainPin.offsetTop - shift.y}px`;
+        mainPin.style.left = `${mainPin.offsetLeft - shift.x}px`;
+      };
+
+      const onMouseUp = () => {
+        document.removeEventListener(`mousemove`, onMouseMove);
+        document.removeEventListener(`mouseup`, onMouseUp);
+        activateForms();
+        mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
+        mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
+      };
+      document.addEventListener(`mousemove`, onMouseMove);
+      document.addEventListener(`mouseup`, onMouseUp);
     }
   };
 

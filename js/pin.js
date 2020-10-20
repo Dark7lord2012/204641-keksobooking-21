@@ -17,6 +17,9 @@
   const adFormElements = window.map.adFormElements;
   const mapPins = window.data.mapPins;
   const showCardPopup = window.card.showCardPopup;
+  const MAP_RANGE_TOP = window.data.MAP_RANGE_TOP;
+  const MAP_RANGE_BOTTOM = window.data.MAP_RANGE_BOTTOM;
+  const mapWidth = window.data.mapWidth;
 
   const renderPin = (pin) => {
     let pinElement = templatePin.cloneNode(true);
@@ -86,14 +89,12 @@
   // Активация форм по нажатию
   const onFormsActivateMousedown = (evt) => {
     if (evt.button === 0) {
-
-
       let startCoords = {
         x: evt.clientX,
         y: evt.clientY
       };
-      const onMouseMove = (moveEvt) => {
 
+      const onMouseMove = (moveEvt) => {
         let shift = {
           x: startCoords.x - moveEvt.clientX,
           y: startCoords.y - moveEvt.clientY
@@ -104,16 +105,31 @@
           y: moveEvt.clientY
         };
 
-        mainPin.style.top = `${mainPin.offsetTop - shift.y}px`;
-        mainPin.style.left = `${mainPin.offsetLeft - shift.x}px`;
+        let diffY = mainPin.offsetTop - shift.y;
+        let diffX = mainPin.offsetLeft - shift.x;
+
+        if (diffY < MAP_RANGE_TOP) {
+          diffY = MAP_RANGE_TOP;
+        }
+
+        if (diffY > MAP_RANGE_BOTTOM) {
+          diffY = MAP_RANGE_BOTTOM;
+        }
+
+        if (diffX > mapWidth) {
+          diffX = mapWidth;
+        }
+
+        mainPin.style.top = `${diffY}px`;
+        mainPin.style.left = `${diffX}px`;
       };
 
       const onMouseUp = () => {
+        activateForms();
         document.removeEventListener(`mousemove`, onMouseMove);
         document.removeEventListener(`mouseup`, onMouseUp);
-        activateForms();
-        mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
-        mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
+        // mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
+        // mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
       };
       document.addEventListener(`mousemove`, onMouseMove);
       document.addEventListener(`mouseup`, onMouseUp);

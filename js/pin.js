@@ -3,12 +3,7 @@
 (() => {
   const templatePin = document.querySelector(`#pin`).content.querySelector(`button`);
   const mainPin = document.querySelector(`.map__pin--main`);
-  // let locationX = parseInt(mainPin.style.left, 10);
-  // let locationY = parseInt(mainPin.style.top, 10);
   const addressMainPin = document.querySelector(`#address`);
-  // const widthMainPin = mainPin.offsetWidth;
-  // const heightMainPin = mainPin.offsetHeight;
-  // addressMainPin.value = `${Math.round(locationX + (widthMainPin / 2))}, ${Math.round(locationY + (heightMainPin / 2))}`;
 
   const removeChildrenNode = window.data.removeChildrenNode;
   const mapFilters = window.map.mapFilters;
@@ -126,6 +121,9 @@
           diffY = MAP_RANGE_BOTTOM;
         }
 
+        if (diffX < 0) {
+          diffX = 0;
+        }
         if (diffX > mapWidth) {
           diffX = mapWidth;
         }

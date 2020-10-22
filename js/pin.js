@@ -3,12 +3,7 @@
 (() => {
   const templatePin = document.querySelector(`#pin`).content.querySelector(`button`);
   const mainPin = document.querySelector(`.map__pin--main`);
-  let locationX = parseInt(mainPin.style.left, 10);
-  let locationY = parseInt(mainPin.style.top, 10);
   const addressMainPin = document.querySelector(`#address`);
-  const widthMainPin = mainPin.offsetWidth;
-  const heightMainPin = mainPin.offsetHeight;
-  addressMainPin.value = `${Math.round(locationX + (widthMainPin / 2))}, ${Math.round(locationY + (heightMainPin / 2))}`;
 
   const removeChildrenNode = window.data.removeChildrenNode;
   const mapFilters = window.map.mapFilters;
@@ -17,6 +12,19 @@
   const adFormElements = window.map.adFormElements;
   const mapPins = window.data.mapPins;
   const showCardPopup = window.card.showCardPopup;
+  const MAP_RANGE_TOP = window.data.MAP_RANGE_TOP;
+  const MAP_RANGE_BOTTOM = window.data.MAP_RANGE_BOTTOM;
+  const mapWidth = window.data.mapWidth;
+
+  const calculateAddress = (pin, inputAddress) => {
+    const x = parseInt(pin.style.left, 10);
+    const y = parseInt(pin.style.top, 10);
+    const widthPin = pin.offsetWidth;
+    const heightPin = pin.offsetHeight;
+    inputAddress.value = `${Math.round(x + (widthPin / 2))}, ${Math.round(y + (heightPin / 2))}`;
+  };
+
+  calculateAddress(mainPin, addressMainPin);
 
   const renderPin = (pin) => {
     let pinElement = templatePin.cloneNode(true);
@@ -30,7 +38,7 @@
   };
 
   const activateForms = () => {
-    // Координаты и размеры метки (в активном состоянии)
+    // Координата теперь не в середине, а в остром конце метки
     mainPin.style.transform = `translateY(-100%)`;
     // Убираем отключение активных элементов, написанные выше
     document.querySelector(`.map`).classList.remove(`map--faded`);
@@ -83,12 +91,57 @@
     window.network.upload(successHandler, errorHandler);
   };
 
-
+  // Активация форм по нажатию
   const onFormsActivateMousedown = (evt) => {
     if (evt.button === 0) {
-      activateForms();
-      mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
-      mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
+      let startCoords = {
+        x: evt.clientX,
+        y: evt.clientY
+      };
+
+      const onMouseMove = (moveEvt) => {
+        let shift = {
+          x: startCoords.x - moveEvt.clientX,
+          y: startCoords.y - moveEvt.clientY
+        };
+
+        startCoords = {
+          x: moveEvt.clientX,
+          y: moveEvt.clientY
+        };
+
+        let diffY = mainPin.offsetTop - shift.y;
+        let diffX = mainPin.offsetLeft - shift.x;
+
+        if (diffY < MAP_RANGE_TOP) {
+          diffY = MAP_RANGE_TOP;
+        }
+
+        if (diffY > MAP_RANGE_BOTTOM) {
+          diffY = MAP_RANGE_BOTTOM;
+        }
+
+        if (diffX < 0) {
+          diffX = 0;
+        }
+        if (diffX > mapWidth) {
+          diffX = mapWidth;
+        }
+
+        mainPin.style.top = `${diffY}px`;
+        mainPin.style.left = `${diffX}px`;
+      };
+
+      const onMouseUp = () => {
+        activateForms();
+        document.removeEventListener(`mousemove`, onMouseMove);
+        document.removeEventListener(`mouseup`, onMouseUp);
+        // mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
+        // mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
+        calculateAddress(mainPin, addressMainPin);
+      };
+      document.addEventListener(`mousemove`, onMouseMove);
+      document.addEventListener(`mouseup`, onMouseUp);
     }
   };
 

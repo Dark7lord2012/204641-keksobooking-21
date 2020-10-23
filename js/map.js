@@ -1,14 +1,18 @@
 'use strict';
 
 (() => {
-  const mapFilters = document.querySelectorAll(`.map__filter`);
-  const mapFeatures = document.querySelector(`.map__features`);
-  const pins = document.querySelectorAll(`.map__pin`);
-  const mapPins = document.querySelector(`.map__pins`);
-  const adFormHeader = document.querySelector(`.ad-form-header`);
-  const adFormElements = document.querySelectorAll(`.ad-form__element`);
+  const map = document.querySelector(`.map`);
+  const mapFilters = map.querySelectorAll(`.map__filter`);
+  const mapFeatures = map.querySelector(`.map__features`);
+  const mapPins = map.querySelector(`.map__pins`);
+  const pins = mapPins.querySelectorAll(`.map__pin`);
+  const adForm = document.querySelector(`.ad-form`);
+  const adFormHeader = adForm.querySelector(`.ad-form-header`);
+  const adFormElements = adForm.querySelectorAll(`.ad-form__element`);
 
   const deactivateForms = () => {
+    map.classList.add(`map--faded`);
+    adForm.classList.add(`ad-form--disabled`);
     // Фильтры меток
     for (let filter of mapFilters) {
       filter.disabled = true;

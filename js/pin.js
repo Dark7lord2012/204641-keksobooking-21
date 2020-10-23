@@ -52,7 +52,7 @@
     for (let element of adFormElements) {
       element.disabled = false;
     }
-    // Генерация и отрисовка метки
+    // Скачивание и отрисовка меток
     const successHandler = (apartments) => {
       let data = apartments;
       // Отфильтрование квартир по типа и ограничение размера
@@ -156,12 +156,17 @@
   mainPin.addEventListener(`mousedown`, onFormsActivateMousedown);
   mainPin.addEventListener(`keydown`, onFormsActivateKeydown);
 
+  const removePins = (pins, except) => {
+    window.data.removeChildrenNode(pins, except);
+  };
+
   window.pin = {
     templatePin,
     mainPin,
     renderPin,
     activateForms,
     onFormsActivateMousedown,
-    onFormsActivateKeydown
+    onFormsActivateKeydown,
+    removePins
   };
 })();

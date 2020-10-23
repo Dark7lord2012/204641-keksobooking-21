@@ -9,14 +9,21 @@
   const activateForms = window.pin.activateForms;
   const closeCardPopup = window.card.closeCardPopup;
   const housingType = document.querySelector(`#housing-type`);
+  const housingPrice = document.querySelector(`#housing-price`);
+  const housingRooms = document.querySelector(`#housing-rooms`);
+  const housingGuests = document.querySelector(`#housing-guests`);
 
-  housingType.addEventListener(`change`, () => {
+  // Придумать название, которое говорить что закрывает карточку при любом изменении фильтров
+  const onFilterChange = () => {
     activateForms();
-
-    // Если карточка пина открыта, то ее нужно закрыть
     const popup = document.querySelector(`.map__card`);
     if (popup) {
       closeCardPopup();
     }
-  });
+  };
+
+  housingType.addEventListener(`change`, onFilterChange);
+  housingPrice.addEventListener(`change`, onFilterChange);
+  housingRooms.addEventListener(`change`, onFilterChange);
+  housingGuests.addEventListener(`change`, onFilterChange);
 })();

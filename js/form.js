@@ -8,6 +8,9 @@
   const roomsApartment = document.querySelector(`#room_number`);
   const capacityApartment = document.querySelector(`#capacity`);
   const options = capacityApartment.querySelectorAll(`option`);
+  const adForm = document.querySelector(`.ad-form`);
+  const mapPins = document.querySelector(`.map__pins`);
+  const mainPin = mapPins.querySelector(`.map__pin--main`);
 
   const setTypeApartment = () => {
     if (typeApartment.value === `bungalow`) {
@@ -119,10 +122,72 @@
   roomsApartment.addEventListener(`change`, onRoomsApartmentChange);
 
   // При первом запуске один параметр может неверно совпадать с другим в форме
-  setTypeApartment();
-  setTimeInApartment();
-  setTimeOutApartment();
-  setRoomsApartment();
+  const setDefaultForms = () => {
+    setTypeApartment();
+    setTimeInApartment();
+    setTimeOutApartment();
+    setRoomsApartment();
+  };
+
+  setDefaultForms();
+
+  // Отправка формы на сервер
+  adForm.addEventListener(`submit`, (evt) => {
+    window.network.save(new FormData(adForm), onSuccess);
+    evt.preventDefault();
+  });
+
+  const onSuccess = (answer) => {
+    if (answer === true) {
+      const templateSuccess = document.querySelector(`#success`).content;
+      const mainPage = document.querySelector(`main`);
+      const elementSuccess = templateSuccess.cloneNode(true);
+      mainPage.appendChild(elementSuccess);
+      const successMessage = document.querySelector(`.success`);
+
+      const successMessageClick = () => {
+        successMessage.remove();
+        adForm.reset();
+        window.map.deactivateForms();
+        window.pin.removePins(mapPins, mainPin);
+        setDefaultForms();
+        successMessage.removeEventListener(`click`, successMessageClick);
+      };
+
+      const successMessagePressEsc = (evt) => {
+        if (evt.key === `Escape`) {
+          successMessage.remove();
+          document.removeEventListener(`keydown`, successMessagePressEsc);
+        }
+      };
+
+      successMessage.addEventListener(`click`, successMessageClick);
+      document.addEventListener(`keydown`, successMessagePressEsc);
+    } else {
+      const templateError = document.querySelector(`#error`).content;
+      const mainPage = document.querySelector(`main`);
+      const elementError = templateError.cloneNode(true);
+      mainPage.appendChild(elementError);
+      const errorMessage = document.querySelector(`.error`);
+      const btnErrorMessage = errorMessage.querySelector(`.error__button`);
+
+      const errorMessageClick = () => {
+        errorMessage.remove();
+        errorMessage.removeEventListener(`click`, errorMessageClick);
+      };
+
+      const errorMessagePressEsc = (evt) => {
+        if (evt === `Escape`) {
+          errorMessage.remove();
+          errorMessage.removeEventListener(`keydown`, errorMessagePressEsc);
+        }
+      };
+
+      errorMessage.addEventListener(`click`, errorMessageClick);
+      errorMessage.addEventListener(`keydown`, errorMessagePressEsc);
+      btnErrorMessage.addEventListener(`click`, errorMessageClick); // Нужно ли писать ей обработчик отдельно?
+    }
+  };
 
   window.form = {
     setTypeApartment,

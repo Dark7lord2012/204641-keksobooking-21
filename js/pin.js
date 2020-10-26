@@ -57,13 +57,6 @@
       let data = apartments;
       // Отфильтрование квартир по типа и ограничение размера
       let filtered = window.filter.filterAllOptions(data);
-      // let filterAllOptions = window.filter.filterAllOptions;
-      // const debounce = window.debounce;
-      // const filterAllOptionsDebounced = debounce(filterAllOptions, 3000);
-      // let filtered = filterAllOptionsDebounced(data);
-      // console.log(filtered);
-      // console.log(filterAllOptionsDebounced);
-      // console.log(filterAllOptionsDebounced(data));
       filtered = filtered.slice(0, 5);
       apartments = filtered;
 

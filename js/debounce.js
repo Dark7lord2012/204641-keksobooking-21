@@ -1,7 +1,7 @@
 'use strict';
 
 (() => {
-  let DEBOUNCE_INTERVAL = 300; // ms
+  let DEBOUNCE_INTERVAL = 1200; // ms
 
   window.debounce = (cb) => {
     let lastTimeout = null;

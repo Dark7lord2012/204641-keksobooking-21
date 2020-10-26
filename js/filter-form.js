@@ -23,8 +23,9 @@
 
   // Придумать название, которое говорить что закрывает карточку при любом изменении фильтров
   const onFilterChange = () => {
-    activateForms();
+    window.debounce(activateForms)();
     const popup = document.querySelector(`.map__card`);
+
     if (popup) {
       closeCardPopup();
     }

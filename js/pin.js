@@ -56,7 +56,8 @@
     const successHandler = (apartments) => {
       let data = apartments;
       // Отфильтрование квартир по типа и ограничение размера
-      let filtered = window.filter.filterType(data);
+      let filtered = window.filter.filterAllOptions(data);
+      filtered = filtered.slice(0, 5);
       apartments = filtered;
 
       for (let i = 0; i < apartments.length; i++) {

@@ -9,9 +9,6 @@ const imagesPreview = document.querySelector(`.ad-form__photo`);
 const photoContainer = document.querySelector(`.ad-form__photo-container`);
 const adFormUpload = document.querySelector(`.ad-form__upload`);
 
-// const avatarPreviewDefault = avatarPreview.src;
-// console.log(avatarPreviewDefault);
-
 avatarChooser.addEventListener(`change`, () => {
   let avatar = avatarChooser.files[0];
   let avatarName = avatar.name.toLowerCase();
@@ -32,6 +29,7 @@ avatarChooser.addEventListener(`change`, () => {
 imagesChooser.addEventListener(`change`, () => {
   let images = imagesChooser.files;
   window.data.removeChildrenNode(photoContainer, adFormUpload);
+  // let fragment = document.createDocumentFragment();
 
   for (let image of images) {
     let imageName = image.name.toLowerCase();
@@ -55,10 +53,14 @@ imagesChooser.addEventListener(`change`, () => {
         block.style.display = `flex`;
 
         block.appendChild(element);
-        photoContainer.appendChild(block);
+        photoContainer.appendChild(block); // Пытался изменить эту строку на fragment но не стработало
+        // fragment.appendChild(block);
       });
 
       reader.readAsDataURL(image);
     }
   }
+
+  // console.log(`hi`);
+  // photoContainer.appendChild(fragment);
 });

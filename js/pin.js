@@ -136,8 +136,6 @@ const onFormsActivateMousedown = (evt) => {
       activateForms();
       document.removeEventListener(`mousemove`, onMouseMove);
       document.removeEventListener(`mouseup`, onMouseUp);
-      // mainPin.removeEventListener(`mousedown`, onFormsActivateMousedown);
-      // mainPin.removeEventListener(`keydown`, onFormsActivateKeydown);
       calculateAddress(mainPin, addressMainPin);
     };
     document.addEventListener(`mousemove`, onMouseMove);

@@ -5,10 +5,16 @@ const map = document.querySelector(`.map`);
 const mapFilters = map.querySelectorAll(`.map__filter`);
 const mapFeatures = map.querySelector(`.map__features`);
 const mapPins = map.querySelector(`.map__pins`);
+const mainPin = mapPins.querySelector(`.map__pin--main`);
 const pins = mapPins.querySelectorAll(`.map__pin`);
 const adForm = document.querySelector(`.ad-form`);
 const adFormHeader = adForm.querySelector(`.ad-form-header`);
 const adFormElements = adForm.querySelectorAll(`.ad-form__element`);
+
+const defaultCoordsPin = {
+  x: mainPin.style.left,
+  y: mainPin.style.top
+};
 
 const deactivateForms = () => {
   map.classList.add(`map--faded`);
@@ -24,6 +30,9 @@ const deactivateForms = () => {
       pin.disabled = true;
     }
   }
+  // Главной метке сброс координат
+  mainPin.style.left = defaultCoordsPin.x;
+  mainPin.style.top = defaultCoordsPin.y;
   // Форма объявления
   adFormHeader.disabled = true;
   for (let element of adFormElements) {

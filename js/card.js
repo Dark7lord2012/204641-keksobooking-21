@@ -25,7 +25,7 @@ const renderCard = (card) => {
   popupCapacity.textContent = `${card.offer.rooms} комнаты для ${card.offer.guests} гостей`;
 
   const popupTime = cardElement.querySelector(`.popup__text--time`);
-  popupTime.textContent = `Заезд после ${card.offer.checkin} выезд до ${card.offer.checkout}`; // мнемоника?
+  popupTime.textContent = `Заезд после ${card.offer.checkin} выезд до ${card.offer.checkout}`;
 
   // Фичи
   const popupFeatures = cardElement.querySelector(`.popup__features`);

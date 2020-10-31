@@ -72,7 +72,7 @@ const getRandomArray = (array, length = getRandomNumber(0, array.length - 1)) =>
   const newArray = array;
   for (let i = newArray.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1)); // Алгоритм Фишера-Йетса
-    [array[i], array[j]] = [array[j], array[i]]; // Почитать в MDN про деструктурируещее присваивание (!)
+    [array[i], array[j]] = [array[j], array[i]];
   }
 
   return newArray.slice(0, length);

@@ -1,14 +1,22 @@
 'use strict';
 
-
 const map = document.querySelector(`.map`);
 const mapFilters = map.querySelectorAll(`.map__filter`);
 const mapFeatures = map.querySelector(`.map__features`);
 const mapPins = map.querySelector(`.map__pins`);
+const mainPin = mapPins.querySelector(`.map__pin--main`);
 const pins = mapPins.querySelectorAll(`.map__pin`);
+
 const adForm = document.querySelector(`.ad-form`);
 const adFormHeader = adForm.querySelector(`.ad-form-header`);
 const adFormElements = adForm.querySelectorAll(`.ad-form__element`);
+const avatarDefaultSource = adForm.querySelector(`.ad-form-header__preview img`).src;
+const photoContainerContent = adForm.querySelector(`.ad-form__photo-container`).innerHTML;
+
+const defaultCoordsPin = {
+  x: mainPin.style.left,
+  y: mainPin.style.top
+};
 
 const deactivateForms = () => {
   map.classList.add(`map--faded`);
@@ -24,11 +32,17 @@ const deactivateForms = () => {
       pin.disabled = true;
     }
   }
+  // Главной метке сброс координат
+  mainPin.style.left = defaultCoordsPin.x;
+  mainPin.style.top = defaultCoordsPin.y;
   // Форма объявления
   adFormHeader.disabled = true;
   for (let element of adFormElements) {
     element.disabled = true;
   }
+  // Сброс превью в загрузчиках фото
+  adForm.querySelector(`.ad-form-header__preview img`).src = avatarDefaultSource;
+  adForm.querySelector(`.ad-form__photo-container`).innerHTML = photoContainerContent;
 };
 
 deactivateForms();

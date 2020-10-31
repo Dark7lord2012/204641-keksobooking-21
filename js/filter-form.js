@@ -20,7 +20,7 @@ const filterWasher = document.querySelector(`#filter-washer`);
 const filterElevator = document.querySelector(`#filter-elevator`);
 const filterConditioner = document.querySelector(`#filter-conditioner`);
 
-// Придумать название, которое говорить что закрывает карточку при любом изменении фильтров
+// Закрывает карточку при любом изменении фильтров
 const onFilterChange = () => {
   window.debounce(activateForms)();
 

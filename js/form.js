@@ -14,19 +14,33 @@ const mapPins = document.querySelector(`.map__pins`);
 const mainPin = mapPins.querySelector(`.map__pin--main`);
 const mapFilters = document.querySelector(`.map__filters`);
 
+const TypeApartment = {
+  BUNGALOW: `bungalow`,
+  FLAT: `flat`,
+  HOUSE: `house`,
+  PALACE: `palace`
+};
+
+const MinPriceApartment = {
+  BUNGALOW: `0`,
+  FLAT: `1000`,
+  HOUSE: `5000`,
+  PALACE: `10000`
+};
+
 const setTypeApartment = () => {
-  if (typeApartment.value === `bungalow`) {
-    priceApartment.min = `0`;
-    priceApartment.placeholder = `0`;
-  } else if (typeApartment.value === `flat`) {
-    priceApartment.min = `1000`;
-    priceApartment.placeholder = `1000`;
-  } else if (typeApartment.value === `house`) {
-    priceApartment.min = `5000`;
-    priceApartment.placeholder = `5000`;
-  } else if (typeApartment.value === `palace`) {
-    priceApartment.min = `10000`;
-    priceApartment.placeholder = `10000`;
+  if (typeApartment.value === TypeApartment.BUNGALOW) {
+    priceApartment.min = MinPriceApartment.BUNGALOW;
+    priceApartment.placeholder = MinPriceApartment.BUNGALOW;
+  } else if (typeApartment.value === TypeApartment.FLAT) {
+    priceApartment.min = MinPriceApartment.FLAT;
+    priceApartment.placeholder = MinPriceApartment.FLAT;
+  } else if (typeApartment.value === TypeApartment.HOUSE) {
+    priceApartment.min = MinPriceApartment.HOUSE;
+    priceApartment.placeholder = MinPriceApartment.HOUSE;
+  } else if (typeApartment.value === TypeApartment.PALACE) {
+    priceApartment.min = MinPriceApartment.PALACE;
+    priceApartment.placeholder = MinPriceApartment.PALACE;
   }
 };
 

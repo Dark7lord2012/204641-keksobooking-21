@@ -18,6 +18,12 @@ const Price = {
   MIDDLE_HIGH: 50000
 };
 
+const PriceRank = {
+  LOW: `low`,
+  MIDDLE: `middle`,
+  HIGH: `high`
+};
+
 const filterType = (apartments) => {
   let filtered = apartments;
 
@@ -34,16 +40,16 @@ const filterPrice = (apartments) => {
   let filtered = apartments;
 
   if (housingPrice.value !== allOptions) {
-    if (housingPrice.value === `low`) {
+    if (housingPrice.value === PriceRank.LOW) {
       filtered = filtered.filter((apartment) => {
         return apartment.offer.price < Price.LOW_MIDDLE;
       });
-    } else if (housingPrice.value === `middle`) {
+    } else if (housingPrice.value === PriceRank.MIDDLE) {
       filtered = filtered.filter((apartment) => {
         return apartment.offer.price >= Price.LOW_MIDDLE
               && apartment.offer.price < Price.MIDDLE_HIGH;
       });
-    } else if (housingPrice.value === `high`) {
+    } else if (housingPrice.value === PriceRank.HIGH) {
       filtered = filtered.filter((apartment) => {
         return apartment.offer.price >= Price.MIDDLE_HIGH;
       });

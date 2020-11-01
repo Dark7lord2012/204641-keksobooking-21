@@ -26,7 +26,7 @@ avatarChooser.addEventListener(`change`, () => {
   }
 });
 
-imagesChooser.addEventListener(`change`, () => {
+const onImagesChooserClick = () => {
   const images = imagesChooser.files;
   window.data.removeChildrenNode(photoContainer, adFormUpload);
 
@@ -58,4 +58,10 @@ imagesChooser.addEventListener(`change`, () => {
       reader.readAsDataURL(image);
     }
   }
-});
+};
+
+imagesChooser.addEventListener(`change`, onImagesChooserClick);
+
+window.photo = {
+  onImagesChooserClick
+};

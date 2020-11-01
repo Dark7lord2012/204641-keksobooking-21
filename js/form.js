@@ -1,15 +1,18 @@
 'use strict';
 
-const typeApartment = document.querySelector(`#type`);
-const priceApartment = document.querySelector(`#price`);
-const timeInApartment = document.querySelector(`#timein`);
-const timeOutApartment = document.querySelector(`#timeout`);
-const roomsApartment = document.querySelector(`#room_number`);
-const capacityApartment = document.querySelector(`#capacity`);
-const options = capacityApartment.querySelectorAll(`option`);
 const adForm = document.querySelector(`.ad-form`);
+const typeApartment = adForm.querySelector(`#type`);
+const priceApartment = adForm.querySelector(`#price`);
+const timeInApartment = adForm.querySelector(`#timein`);
+const timeOutApartment = adForm.querySelector(`#timeout`);
+const roomsApartment = adForm.querySelector(`#room_number`);
+const capacityApartment = adForm.querySelector(`#capacity`);
+const options = capacityApartment.querySelectorAll(`option`);
+const btnReset = adForm.querySelector(`.ad-form__reset`);
+
 const mapPins = document.querySelector(`.map__pins`);
 const mainPin = mapPins.querySelector(`.map__pin--main`);
+const mapFilters = document.querySelector(`.map__filters`);
 
 const setTypeApartment = () => {
   if (typeApartment.value === `bungalow`) {
@@ -187,6 +190,21 @@ const onSuccess = (answer) => {
     btnErrorMessage.addEventListener(`click`, errorMessageClick);
   }
 };
+
+// Сброс формы по нажатию "Очистить"
+
+const onButtonResetClick = () => {
+  window.map.deactivateForms();
+  window.data.removeChildrenNode(mapPins, mainPin);
+  adForm.reset();
+  mapFilters.reset();
+  // Из-за того, что я меняю старое содержимое загрузчика изображения на старое (default)
+  // удаляется еще и обработчик при выборе картинок после сброса (deactivateForms - последнии строки)
+  const imagesChooser = adForm.querySelector(`#images`);
+  imagesChooser.addEventListener(`change`, window.photo.onImagesChooserClick);
+};
+
+btnReset.addEventListener(`click`, onButtonResetClick);
 
 window.form = {
   setTypeApartment,

@@ -29,18 +29,23 @@ const MinPriceApartment = {
 };
 
 const setTypeApartment = () => {
-  if (typeApartment.value === TypeApartment.BUNGALOW) {
-    priceApartment.min = MinPriceApartment.BUNGALOW;
-    priceApartment.placeholder = MinPriceApartment.BUNGALOW;
-  } else if (typeApartment.value === TypeApartment.FLAT) {
-    priceApartment.min = MinPriceApartment.FLAT;
-    priceApartment.placeholder = MinPriceApartment.FLAT;
-  } else if (typeApartment.value === TypeApartment.HOUSE) {
-    priceApartment.min = MinPriceApartment.HOUSE;
-    priceApartment.placeholder = MinPriceApartment.HOUSE;
-  } else if (typeApartment.value === TypeApartment.PALACE) {
-    priceApartment.min = MinPriceApartment.PALACE;
-    priceApartment.placeholder = MinPriceApartment.PALACE;
+  switch (typeApartment.value) {
+    case TypeApartment.BUNGALOW:
+      priceApartment.min = MinPriceApartment.BUNGALOW;
+      priceApartment.placeholder = MinPriceApartment.BUNGALOW;
+      break;
+    case TypeApartment.FLAT:
+      priceApartment.min = MinPriceApartment.FLAT;
+      priceApartment.placeholder = MinPriceApartment.FLAT;
+      break;
+    case TypeApartment.HOUSE:
+      priceApartment.min = MinPriceApartment.HOUSE;
+      priceApartment.placeholder = MinPriceApartment.HOUSE;
+      break;
+    case TypeApartment.PALACE:
+      priceApartment.min = MinPriceApartment.PALACE;
+      priceApartment.placeholder = MinPriceApartment.PALACE;
+      break;
   }
 };
 

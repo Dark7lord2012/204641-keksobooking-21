@@ -61,12 +61,17 @@ const activateForms = () => {
 
     for (let i = 0; i < apartments.length; i++) {
       const pin = apartments[i];
-      const pinElement = renderPin(pin);
-      fragment.appendChild(pinElement);
 
-      pinElement.addEventListener(`click`, () => {
-        showCardPopup(pin);
-      });
+      // Согласно ТЗ 5.3 меткам без поля offer рендер не разрешен
+      if (pin.offer) {
+        const pinElement = renderPin(pin);
+        fragment.appendChild(pinElement);
+
+        pinElement.addEventListener(`click`, () => {
+          showCardPopup(pin);
+        });
+      }
+
     }
 
     removeChildrenNode(mapPins, mainPin); // Очистка от старых меток

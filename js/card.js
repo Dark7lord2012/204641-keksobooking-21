@@ -1,7 +1,7 @@
 'use strict';
 
-const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 const TYPE_APARTMENT_RUSSIAN = window.data.TYPE_APARTMENT_RUSSIAN;
+const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 const removeChildrenNode = window.data.removeChildrenNode;
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
 const map = document.querySelector(`.map`);

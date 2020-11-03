@@ -1,5 +1,8 @@
 'use strict';
 
+const MAP_RANGE_TOP = window.data.MAP_RANGE_TOP;
+const MAP_RANGE_BOTTOM = window.data.MAP_RANGE_BOTTOM;
+
 const templatePin = document.querySelector(`#pin`).content.querySelector(`button`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const addressMainPin = document.querySelector(`#address`);
@@ -11,8 +14,6 @@ const adFormHeader = window.map.adFormHeader;
 const adFormElements = window.map.adFormElements;
 const mapPins = window.data.mapPins;
 const showCardPopup = window.card.showCardPopup;
-const MAP_RANGE_TOP = window.data.MAP_RANGE_TOP;
-const MAP_RANGE_BOTTOM = window.data.MAP_RANGE_BOTTOM;
 const mapWidth = window.data.mapWidth;
 
 const calculateAddress = (pin, inputAddress) => {
@@ -51,7 +52,10 @@ const activateForms = () => {
   for (let element of adFormElements) {
     element.disabled = false;
   }
+
   // Скачивание и отрисовка меток
+  const fragment = document.createDocumentFragment();
+
   const successHandler = (apartments) => {
     let data = apartments;
     // Отфильтрование квартир по типа и ограничение размера
@@ -92,7 +96,6 @@ const activateForms = () => {
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
-  const fragment = document.createDocumentFragment();
   window.network.upload(successHandler, errorHandler);
 };
 

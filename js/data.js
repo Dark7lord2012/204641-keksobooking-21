@@ -1,6 +1,5 @@
 'use strict';
 
-
 const AVATARS = [
   `img/avatars/user01.png`,
   `img/avatars/user02.png`,

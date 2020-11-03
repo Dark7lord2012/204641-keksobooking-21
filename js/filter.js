@@ -1,5 +1,7 @@
 'use strict';
 
+const ALL_OPTIONS = `any`;
+
 const housingPrice = document.querySelector(`#housing-price`);
 const housingType = document.querySelector(`#housing-type`);
 const housingRooms = document.querySelector(`#housing-rooms`);
@@ -12,7 +14,6 @@ const checkboxWasher = document.querySelector(`#filter-washer`);
 const checkboxElevator = document.querySelector(`#filter-elevator`);
 const checkboxConditioner = document.querySelector(`#filter-conditioner`);
 
-const allOptions = `any`;
 const Price = {
   LOW_MIDDLE: 10000,
   MIDDLE_HIGH: 50000
@@ -25,150 +26,130 @@ const PriceRank = {
 };
 
 const filterType = (apartments) => {
-  let filtered = apartments;
-
-  if (housingType.value !== allOptions) {
-    filtered = filtered.filter((apartment) => {
+  if (housingType.value !== ALL_OPTIONS) {
+    apartments = apartments.filter((apartment) => {
       return apartment.offer.type === housingType.value;
     });
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterPrice = (apartments) => {
-  let filtered = apartments;
-
-  if (housingPrice.value !== allOptions) {
+  if (housingPrice.value !== ALL_OPTIONS) {
     if (housingPrice.value === PriceRank.LOW) {
-      filtered = filtered.filter((apartment) => {
+      apartments = apartments.filter((apartment) => {
         return apartment.offer.price < Price.LOW_MIDDLE;
       });
     } else if (housingPrice.value === PriceRank.MIDDLE) {
-      filtered = filtered.filter((apartment) => {
+      apartments = apartments.filter((apartment) => {
         return apartment.offer.price >= Price.LOW_MIDDLE
               && apartment.offer.price < Price.MIDDLE_HIGH;
       });
     } else if (housingPrice.value === PriceRank.HIGH) {
-      filtered = filtered.filter((apartment) => {
+      apartments = apartments.filter((apartment) => {
         return apartment.offer.price >= Price.MIDDLE_HIGH;
       });
     }
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterRooms = (apartments) => {
-  let filtered = apartments;
-
-  if (housingRooms.value !== allOptions) {
-    filtered = filtered.filter((apartment) => {
+  if (housingRooms.value !== ALL_OPTIONS) {
+    apartments = apartments.filter((apartment) => {
       return apartment.offer.rooms === parseInt(housingRooms.value, 10);
     });
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterGuests = (apartments) => {
-  let filtered = apartments;
-
-  if (housingGuests.value !== allOptions) {
-    filtered = filtered.filter((apartment) => {
+  if (housingGuests.value !== ALL_OPTIONS) {
+    apartments = apartments.filter((apartment) => {
       return apartment.offer.guests === parseInt(housingGuests.value, 10);
     });
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterWifi = (apartments) => {
-  let filtered = apartments;
-
   if (checkboxWifi.checked) {
-    filtered = filtered.filter((apartment) => {
+    apartments = apartments.filter((apartment) => {
       return apartment.offer.features.includes(`wifi`);
     });
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterDishwasher = (apartments) => {
-  let filtered = apartments;
-
   if (checkboxDishwasher.checked) {
-    filtered = filtered.filter((apartment) => {
+    apartments = apartments.filter((apartment) => {
       return apartment.offer.features.includes(`dishwasher`);
     });
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterParking = (apartments) => {
-  let filtered = apartments;
-
   if (checkboxParking.checked) {
-    filtered = filtered.filter((apartment) => {
+    apartments = apartments.filter((apartment) => {
       return apartment.offer.features.includes(`parking`);
     });
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterWasher = (apartments) => {
-  let filtered = apartments;
-
   if (checkboxWasher.checked) {
-    filtered = filtered.filter((apartment) => {
+    apartments = apartments.filter((apartment) => {
       return apartment.offer.features.includes(`washer`);
     });
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterElevator = (apartments) => {
-  let filtered = apartments;
-
   if (checkboxElevator.checked) {
-    filtered = filtered.filter((apartment) => {
+    apartments = apartments.filter((apartment) => {
       return apartment.offer.features.includes(`elevator`);
     });
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterConditioner = (apartments) => {
-  let filtered = apartments;
-
   if (checkboxConditioner.checked) {
-    filtered = filtered.filter((apartment) => {
+    apartments = apartments.filter((apartment) => {
       return apartment.offer.features.includes(`conditioner`);
     });
   }
 
-  return filtered;
+  return apartments;
 };
 
 const filterAllOptions = (apartments) => {
-  let filtered = filterType(apartments);
-  filtered = filterPrice(filtered);
-  filtered = filterRooms(filtered);
-  filtered = filterGuests(filtered);
+  apartments = filterType(apartments);
+  apartments = filterPrice(apartments);
+  apartments = filterRooms(apartments);
+  apartments = filterGuests(apartments);
 
-  filtered = filterWifi(filtered);
-  filtered = filterDishwasher(filtered);
-  filtered = filterParking(filtered);
-  filtered = filterWasher(filtered);
-  filtered = filterElevator(filtered);
-  filtered = filterConditioner(filtered);
+  apartments = filterWifi(apartments);
+  apartments = filterDishwasher(apartments);
+  apartments = filterParking(apartments);
+  apartments = filterWasher(apartments);
+  apartments = filterElevator(apartments);
+  apartments = filterConditioner(apartments);
 
-  return filtered;
+  return apartments;
 };
 
 window.filter = {

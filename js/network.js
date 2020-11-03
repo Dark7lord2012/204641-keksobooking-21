@@ -1,11 +1,12 @@
 'use strict';
 
+const TIMEOUT_IN_MS = 10000;
+const URL_UPLOAD = `https://21.javascript.pages.academy/keksobooking/data`;
+const URL_SAVE = `https://21.javascript.pages.academy/keksobooking`;
+
 let StatusCode = {
   OK: 200
 };
-let TIMEOUT_IN_MS = 10000;
-const URL_UPLOAD = `https://21.javascript.pages.academy/keksobooking/data`;
-const URL_SAVE = `https://21.javascript.pages.academy/keksobooking`;
 
 const upload = (onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
@@ -33,7 +34,7 @@ const upload = (onSuccess, onError) => {
   xhr.timeout = TIMEOUT_IN_MS;
 };
 
-const save = (data, onSuccess) => {
+const save = (data, onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
@@ -42,9 +43,9 @@ const save = (data, onSuccess) => {
 
   xhr.addEventListener(`load`, () => {
     if (xhr.status === StatusCode.OK) {
-      return onSuccess(true);
+      return onSuccess();
     } else {
-      return onSuccess(xhr);
+      return onError();
     }
   });
 

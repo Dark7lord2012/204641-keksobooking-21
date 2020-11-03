@@ -154,60 +154,60 @@ setDefaultForms();
 
 // Отправка формы на сервер
 adForm.addEventListener(`submit`, (evt) => {
-  window.network.save(new FormData(adForm), onSuccess);
+  window.network.save(new FormData(adForm), onSuccess, onError);
   evt.preventDefault();
 });
 
-const onSuccess = (answer) => {
-  if (answer === true) {
-    const templateSuccess = document.querySelector(`#success`).content;
-    const mainPage = document.querySelector(`main`);
-    const elementSuccess = templateSuccess.cloneNode(true);
-    mainPage.appendChild(elementSuccess);
-    const successMessage = document.querySelector(`.success`);
+const onSuccess = () => {
+  const templateSuccess = document.querySelector(`#success`).content;
+  const mainPage = document.querySelector(`main`);
+  const elementSuccess = templateSuccess.cloneNode(true);
+  mainPage.appendChild(elementSuccess);
+  const successMessage = document.querySelector(`.success`);
 
-    const successMessageClick = () => {
+  const successMessageClick = () => {
+    successMessage.remove();
+    adForm.reset();
+    window.map.deactivateForms();
+    window.pin.removePins(mapPins, mainPin);
+    setDefaultForms();
+    successMessage.removeEventListener(`click`, successMessageClick);
+  };
+
+  const successMessagePressEsc = (evt) => {
+    if (evt.key === `Escape`) {
       successMessage.remove();
-      adForm.reset();
-      window.map.deactivateForms();
-      window.pin.removePins(mapPins, mainPin);
-      setDefaultForms();
-      successMessage.removeEventListener(`click`, successMessageClick);
-    };
+      document.removeEventListener(`keydown`, successMessagePressEsc);
+    }
+  };
 
-    const successMessagePressEsc = (evt) => {
-      if (evt.key === `Escape`) {
-        successMessage.remove();
-        document.removeEventListener(`keydown`, successMessagePressEsc);
-      }
-    };
+  successMessage.addEventListener(`click`, successMessageClick);
+  document.addEventListener(`keydown`, successMessagePressEsc);
+};
 
-    successMessage.addEventListener(`click`, successMessageClick);
-    document.addEventListener(`keydown`, successMessagePressEsc);
-  } else {
-    const templateError = document.querySelector(`#error`).content;
-    const mainPage = document.querySelector(`main`);
-    const elementError = templateError.cloneNode(true);
-    mainPage.appendChild(elementError);
-    const errorMessage = document.querySelector(`.error`);
-    const btnErrorMessage = errorMessage.querySelector(`.error__button`);
+const onError = () => {
+  const templateError = document.querySelector(`#error`).content;
+  const mainPage = document.querySelector(`main`);
+  const elementError = templateError.cloneNode(true);
+  mainPage.appendChild(elementError);
+  const errorMessage = document.querySelector(`.error`);
+  const btnErrorMessage = errorMessage.querySelector(`.error__button`);
 
-    const errorMessageClick = () => {
+  const errorMessageClick = () => {
+    errorMessage.remove();
+    errorMessage.removeEventListener(`click`, errorMessageClick);
+  };
+
+  const errorMessagePressEsc = (evt) => {
+    if (evt === `Escape`) {
       errorMessage.remove();
-      errorMessage.removeEventListener(`click`, errorMessageClick);
-    };
+      errorMessage.removeEventListener(`keydown`, errorMessagePressEsc);
+    }
+  };
 
-    const errorMessagePressEsc = (evt) => {
-      if (evt === `Escape`) {
-        errorMessage.remove();
-        errorMessage.removeEventListener(`keydown`, errorMessagePressEsc);
-      }
-    };
-
-    errorMessage.addEventListener(`click`, errorMessageClick);
-    errorMessage.addEventListener(`keydown`, errorMessagePressEsc);
-    btnErrorMessage.addEventListener(`click`, errorMessageClick);
-  }
+  errorMessage.addEventListener(`click`, errorMessageClick);
+  errorMessage.addEventListener(`keydown`, errorMessagePressEsc);
+  btnErrorMessage.addEventListener(`click`, errorMessageClick);
 };
 
 // Сброс формы по нажатию "Очистить"

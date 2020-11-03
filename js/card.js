@@ -1,8 +1,14 @@
 'use strict';
 
-const TYPE_APARTMENT_RUSSIAN = window.data.TYPE_APARTMENT_RUSSIAN;
+const TYPE_APARTMENT_RUSSIAN = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalow: `Бунгало`
+};
+
 const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
-const removeChildrenNode = window.data.removeChildrenNode;
+const removeChildrenNode = window.utils.removeChildrenNode;
 const mapFilterContainer = document.querySelector(`.map__filters-container`);
 const map = document.querySelector(`.map`);
 
@@ -38,7 +44,6 @@ const renderCard = (card) => {
   }
 
   const popupCapacity = cardElement.querySelector(`.popup__text--capacity`);
-  // Что будет если будет только комнаты или только гости? Некорректное поле?
   if (card.offer.rooms && card.offer.guests) {
     popupCapacity.textContent = `${card.offer.rooms} комнаты для ${card.offer.guests} гостей`;
   } else {
@@ -46,7 +51,6 @@ const renderCard = (card) => {
   }
 
   const popupTime = cardElement.querySelector(`.popup__text--time`);
-  // Ну по идее оба времени связаны и одинаковы, но что если нет?
   if (card.offer.checkin && card.offer.checkout) {
     popupTime.textContent = `Заезд после ${card.offer.checkin} выезд до ${card.offer.checkout}`;
   } else {

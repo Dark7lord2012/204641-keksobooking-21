@@ -153,13 +153,6 @@ const filterAllOptions = (apartments) => {
 };
 
 window.filter = {
-  housingType,
-  filterType,
-  filterPrice,
-  filterRooms,
-  filterGuests,
-  filterWifi,
-  filterDishwasher,
   filterAllOptions
 };
 

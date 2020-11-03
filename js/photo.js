@@ -28,7 +28,7 @@ avatarChooser.addEventListener(`change`, () => {
 
 const onImagesChooserClick = () => {
   const images = imagesChooser.files;
-  window.data.removeChildrenNode(photoContainer, adFormUpload);
+  window.utils.removeChildrenNode(photoContainer, adFormUpload);
 
   for (let image of images) {
     const imageName = image.name.toLowerCase();

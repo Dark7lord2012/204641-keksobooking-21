@@ -91,7 +91,7 @@ timeOutApartment.addEventListener(`change`, onTimeOutApartmentChange);
 
 const setRoomsApartment = () => {
   for (let option of options) {
-    option.disabled = false; // Сброс disabled при повторном вызове
+    option.disabled = false;
   }
   let selectedOption;
 
@@ -214,7 +214,7 @@ const onError = () => {
 
 const onButtonResetClick = () => {
   window.map.deactivateForms();
-  window.data.removeChildrenNode(mapPins, mainPin);
+  window.utils.removeChildrenNode(mapPins, mainPin);
   adForm.reset();
   mapFilters.reset();
   // Из-за того, что я меняю старое содержимое загрузчика изображения на старое (default)

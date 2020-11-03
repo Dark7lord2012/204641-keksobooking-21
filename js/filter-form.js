@@ -1,10 +1,5 @@
 'use strict';
 
-// Создал как бы подмодуль для filter, так как оттуда я не могу
-// вызвать функцию модуля pin, поэтому создал этот модуль
-// который ниже модуля pin и из этого модуля могу спокойно вызвать
-// activateForms()
-
 const activateForms = window.pin.activateForms;
 const closeCardPopup = window.card.closeCardPopup;
 
@@ -20,7 +15,6 @@ const filterWasher = document.querySelector(`#filter-washer`);
 const filterElevator = document.querySelector(`#filter-elevator`);
 const filterConditioner = document.querySelector(`#filter-conditioner`);
 
-// Закрывает карточку при любом изменении фильтров
 const onFilterChange = () => {
   window.debounce(activateForms)();
 

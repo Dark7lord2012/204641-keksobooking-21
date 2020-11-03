@@ -1,20 +1,21 @@
 'use strict';
 
-const MAP_RANGE_TOP = window.data.MAP_RANGE_TOP;
-const MAP_RANGE_BOTTOM = window.data.MAP_RANGE_BOTTOM;
+const MAP_RANGE_TOP = 130;
+const MAP_RANGE_BOTTOM = 630;
 
 const templatePin = document.querySelector(`#pin`).content.querySelector(`button`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const addressMainPin = document.querySelector(`#address`);
 
-const removeChildrenNode = window.data.removeChildrenNode;
+const removeChildrenNode = window.utils.removeChildrenNode;
 const mapFilters = window.map.mapFilters;
 const mapFeatures = window.map.mapFeatures;
 const adFormHeader = window.map.adFormHeader;
 const adFormElements = window.map.adFormElements;
-const mapPins = window.data.mapPins;
 const showCardPopup = window.card.showCardPopup;
-const mapWidth = window.data.mapWidth;
+const mapPins = document.querySelector(`.map__pins`);
+// 20 - ширина полоски для прокрутки (предполагается)
+const mapWidth = (document.querySelector(`.map__overlay`).offsetWidth - 20);
 
 const calculateAddress = (pin, inputAddress) => {
   const x = parseInt(pin.style.left, 10);
@@ -66,7 +67,7 @@ const activateForms = () => {
     for (let i = 0; i < apartments.length; i++) {
       const pin = apartments[i];
 
-      // Согласно ТЗ 5.3 меткам без поля offer рендер не разрешен
+      // Меткам без поля offer рендер не разрешен по ТЗ
       if (pin.offer) {
         const pinElement = renderPin(pin);
         fragment.appendChild(pinElement);
@@ -163,7 +164,7 @@ mainPin.addEventListener(`mousedown`, onFormsActivateMousedown);
 mainPin.addEventListener(`keydown`, onFormsActivateKeydown);
 
 const removePins = (pins, except) => {
-  window.data.removeChildrenNode(pins, except);
+  removeChildrenNode(pins, except);
 };
 
 window.pin = {

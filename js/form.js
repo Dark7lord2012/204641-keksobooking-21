@@ -1,29 +1,51 @@
 'use strict';
 
-const typeApartment = document.querySelector(`#type`);
-const priceApartment = document.querySelector(`#price`);
-const timeInApartment = document.querySelector(`#timein`);
-const timeOutApartment = document.querySelector(`#timeout`);
-const roomsApartment = document.querySelector(`#room_number`);
-const capacityApartment = document.querySelector(`#capacity`);
-const options = capacityApartment.querySelectorAll(`option`);
 const adForm = document.querySelector(`.ad-form`);
+const typeApartment = adForm.querySelector(`#type`);
+const priceApartment = adForm.querySelector(`#price`);
+const timeInApartment = adForm.querySelector(`#timein`);
+const timeOutApartment = adForm.querySelector(`#timeout`);
+const roomsApartment = adForm.querySelector(`#room_number`);
+const capacityApartment = adForm.querySelector(`#capacity`);
+const options = capacityApartment.querySelectorAll(`option`);
+const btnReset = adForm.querySelector(`.ad-form__reset`);
+
 const mapPins = document.querySelector(`.map__pins`);
 const mainPin = mapPins.querySelector(`.map__pin--main`);
+const mapFilters = document.querySelector(`.map__filters`);
+
+const TypeApartment = {
+  BUNGALOW: `bungalow`,
+  FLAT: `flat`,
+  HOUSE: `house`,
+  PALACE: `palace`
+};
+
+const MinPriceApartment = {
+  BUNGALOW: `0`,
+  FLAT: `1000`,
+  HOUSE: `5000`,
+  PALACE: `10000`
+};
 
 const setTypeApartment = () => {
-  if (typeApartment.value === `bungalow`) {
-    priceApartment.min = `0`;
-    priceApartment.placeholder = `0`;
-  } else if (typeApartment.value === `flat`) {
-    priceApartment.min = `1000`;
-    priceApartment.placeholder = `1000`;
-  } else if (typeApartment.value === `house`) {
-    priceApartment.min = `5000`;
-    priceApartment.placeholder = `5000`;
-  } else if (typeApartment.value === `palace`) {
-    priceApartment.min = `10000`;
-    priceApartment.placeholder = `10000`;
+  switch (typeApartment.value) {
+    case TypeApartment.BUNGALOW:
+      priceApartment.min = MinPriceApartment.BUNGALOW;
+      priceApartment.placeholder = MinPriceApartment.BUNGALOW;
+      break;
+    case TypeApartment.FLAT:
+      priceApartment.min = MinPriceApartment.FLAT;
+      priceApartment.placeholder = MinPriceApartment.FLAT;
+      break;
+    case TypeApartment.HOUSE:
+      priceApartment.min = MinPriceApartment.HOUSE;
+      priceApartment.placeholder = MinPriceApartment.HOUSE;
+      break;
+    case TypeApartment.PALACE:
+      priceApartment.min = MinPriceApartment.PALACE;
+      priceApartment.placeholder = MinPriceApartment.PALACE;
+      break;
   }
 };
 
@@ -69,7 +91,7 @@ timeOutApartment.addEventListener(`change`, onTimeOutApartmentChange);
 
 const setRoomsApartment = () => {
   for (let option of options) {
-    option.disabled = false; // Сброс disabled при повторном вызове
+    option.disabled = false;
   }
   let selectedOption;
 
@@ -132,61 +154,76 @@ setDefaultForms();
 
 // Отправка формы на сервер
 adForm.addEventListener(`submit`, (evt) => {
-  window.network.save(new FormData(adForm), onSuccess);
+  window.network.save(new FormData(adForm), onSuccess, onError);
   evt.preventDefault();
 });
 
-const onSuccess = (answer) => {
-  if (answer === true) {
-    const templateSuccess = document.querySelector(`#success`).content;
-    const mainPage = document.querySelector(`main`);
-    const elementSuccess = templateSuccess.cloneNode(true);
-    mainPage.appendChild(elementSuccess);
-    const successMessage = document.querySelector(`.success`);
+const onSuccess = () => {
+  const templateSuccess = document.querySelector(`#success`).content;
+  const mainPage = document.querySelector(`main`);
+  const elementSuccess = templateSuccess.cloneNode(true);
+  mainPage.appendChild(elementSuccess);
+  const successMessage = document.querySelector(`.success`);
 
-    const successMessageClick = () => {
+  const successMessageClick = () => {
+    successMessage.remove();
+    adForm.reset();
+    window.map.deactivateForms();
+    window.pin.removePins(mapPins, mainPin);
+    setDefaultForms();
+    successMessage.removeEventListener(`click`, successMessageClick);
+  };
+
+  const successMessagePressEsc = (evt) => {
+    if (evt.key === `Escape`) {
       successMessage.remove();
-      adForm.reset();
-      window.map.deactivateForms();
-      window.pin.removePins(mapPins, mainPin);
-      setDefaultForms();
-      successMessage.removeEventListener(`click`, successMessageClick);
-    };
+      document.removeEventListener(`keydown`, successMessagePressEsc);
+    }
+  };
 
-    const successMessagePressEsc = (evt) => {
-      if (evt.key === `Escape`) {
-        successMessage.remove();
-        document.removeEventListener(`keydown`, successMessagePressEsc);
-      }
-    };
-
-    successMessage.addEventListener(`click`, successMessageClick);
-    document.addEventListener(`keydown`, successMessagePressEsc);
-  } else {
-    const templateError = document.querySelector(`#error`).content;
-    const mainPage = document.querySelector(`main`);
-    const elementError = templateError.cloneNode(true);
-    mainPage.appendChild(elementError);
-    const errorMessage = document.querySelector(`.error`);
-    const btnErrorMessage = errorMessage.querySelector(`.error__button`);
-
-    const errorMessageClick = () => {
-      errorMessage.remove();
-      errorMessage.removeEventListener(`click`, errorMessageClick);
-    };
-
-    const errorMessagePressEsc = (evt) => {
-      if (evt === `Escape`) {
-        errorMessage.remove();
-        errorMessage.removeEventListener(`keydown`, errorMessagePressEsc);
-      }
-    };
-
-    errorMessage.addEventListener(`click`, errorMessageClick);
-    errorMessage.addEventListener(`keydown`, errorMessagePressEsc);
-    btnErrorMessage.addEventListener(`click`, errorMessageClick);
-  }
+  successMessage.addEventListener(`click`, successMessageClick);
+  document.addEventListener(`keydown`, successMessagePressEsc);
 };
+
+const onError = () => {
+  const templateError = document.querySelector(`#error`).content;
+  const mainPage = document.querySelector(`main`);
+  const elementError = templateError.cloneNode(true);
+  mainPage.appendChild(elementError);
+  const errorMessage = document.querySelector(`.error`);
+  const btnErrorMessage = errorMessage.querySelector(`.error__button`);
+
+  const errorMessageClick = () => {
+    errorMessage.remove();
+    errorMessage.removeEventListener(`click`, errorMessageClick);
+  };
+
+  const errorMessagePressEsc = (evt) => {
+    if (evt === `Escape`) {
+      errorMessage.remove();
+      errorMessage.removeEventListener(`keydown`, errorMessagePressEsc);
+    }
+  };
+
+  errorMessage.addEventListener(`click`, errorMessageClick);
+  errorMessage.addEventListener(`keydown`, errorMessagePressEsc);
+  btnErrorMessage.addEventListener(`click`, errorMessageClick);
+};
+
+// Сброс формы по нажатию "Очистить"
+
+const onButtonResetClick = () => {
+  window.map.deactivateForms();
+  window.utils.removeChildrenNode(mapPins, mainPin);
+  adForm.reset();
+  mapFilters.reset();
+  // Из-за того, что я меняю старое содержимое загрузчика изображения на старое (default)
+  // удаляется еще и обработчик при выборе картинок после сброса (deactivateForms - последнии строки)
+  const imagesChooser = adForm.querySelector(`#images`);
+  imagesChooser.addEventListener(`change`, window.photo.onImagesChooserClick);
+};
+
+btnReset.addEventListener(`click`, onButtonResetClick);
 
 window.form = {
   setTypeApartment,

@@ -4,7 +4,7 @@ const removeChildrenNode = (node, except = null) => {
   while (node.firstChild) {
     node.removeChild(node.firstChild);
   }
-  if (except !== null) {
+  if (except) {
     node.appendChild(except);
   }
 };

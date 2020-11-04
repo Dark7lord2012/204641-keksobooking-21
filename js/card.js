@@ -1,10 +1,10 @@
 'use strict';
 
-const TYPE_APARTMENT_RUSSIAN = {
-  palace: `Дворец`,
-  flat: `Квартира`,
-  house: `Дом`,
-  bungalow: `Бунгало`
+const TypeApartmentRussian = {
+  PALACE: `Дворец`,
+  FLAT: `Квартира`,
+  HOUSE: `Дом`,
+  BUNGALOW: `Бунгало`
 };
 
 const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
@@ -38,7 +38,7 @@ const renderCard = (card) => {
 
   const popupType = cardElement.querySelector(`.popup__type`);
   if (card.offer.type) {
-    popupType.textContent = TYPE_APARTMENT_RUSSIAN[card.offer.type];
+    popupType.textContent = TypeApartmentRussian[card.offer.type.toUpperCase()];
   } else {
     popupType.remove();
   }

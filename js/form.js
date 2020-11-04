@@ -171,6 +171,7 @@ const onSuccess = () => {
     window.map.deactivateForms();
     window.pin.removePins(mapPins, mainPin);
     setDefaultForms();
+    mapFilters.reset();
     successMessage.removeEventListener(`click`, onSuccessMessageClick);
   };
 

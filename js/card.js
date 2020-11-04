@@ -81,20 +81,20 @@ const renderCard = (card) => {
   }
 
   // Фото
-  const popupPhotos = cardElement.querySelector(`.popup__photos`);
+  const popupPhotosContainer = cardElement.querySelector(`.popup__photos`);
   const popupPhoto = cardElement.querySelector(`.popup__photo`);
 
   if (card.offer.photos && card.offer.photos.length > 0) {
-    removeChildrenNode(popupPhotos);
+    removeChildrenNode(popupPhotosContainer);
 
     for (let i = 0; i < card.offer.photos.length; i++) {
       const photoElement = popupPhoto.cloneNode(true);
       photoElement.src = `${card.offer.photos[i]}`;
-      popupPhotos.appendChild(photoElement);
+      popupPhotosContainer.appendChild(photoElement);
     }
 
   } else {
-    popupPhotos.remove();
+    popupPhotosContainer.remove();
   }
 
   const popupAvatar = cardElement.querySelector(`.popup__avatar`);

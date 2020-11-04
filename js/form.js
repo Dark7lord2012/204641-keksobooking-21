@@ -8,7 +8,7 @@ const timeOutApartment = adForm.querySelector(`#timeout`);
 const roomsApartment = adForm.querySelector(`#room_number`);
 const capacityApartment = adForm.querySelector(`#capacity`);
 const options = capacityApartment.querySelectorAll(`option`);
-const btnReset = adForm.querySelector(`.ad-form__reset`);
+const buttonReset = adForm.querySelector(`.ad-form__reset`);
 
 const mapPins = document.querySelector(`.map__pins`);
 const mainPin = mapPins.querySelector(`.map__pin--main`);
@@ -165,24 +165,24 @@ const onSuccess = () => {
   mainPage.appendChild(elementSuccess);
   const successMessage = document.querySelector(`.success`);
 
-  const successMessageClick = () => {
+  const onSuccessMessageClick = () => {
     successMessage.remove();
     adForm.reset();
     window.map.deactivateForms();
     window.pin.removePins(mapPins, mainPin);
     setDefaultForms();
-    successMessage.removeEventListener(`click`, successMessageClick);
+    successMessage.removeEventListener(`click`, onSuccessMessageClick);
   };
 
-  const successMessagePressEsc = (evt) => {
+  const onSuccessMessagePressEsc = (evt) => {
     if (evt.key === `Escape`) {
       successMessage.remove();
-      document.removeEventListener(`keydown`, successMessagePressEsc);
+      document.removeEventListener(`keydown`, onSuccessMessagePressEsc);
     }
   };
 
-  successMessage.addEventListener(`click`, successMessageClick);
-  document.addEventListener(`keydown`, successMessagePressEsc);
+  successMessage.addEventListener(`click`, onSuccessMessageClick);
+  document.addEventListener(`keydown`, onSuccessMessagePressEsc);
 };
 
 const onError = () => {
@@ -193,21 +193,21 @@ const onError = () => {
   const errorMessage = document.querySelector(`.error`);
   const btnErrorMessage = errorMessage.querySelector(`.error__button`);
 
-  const errorMessageClick = () => {
+  const onErrorMessageClick = () => {
     errorMessage.remove();
-    errorMessage.removeEventListener(`click`, errorMessageClick);
+    errorMessage.removeEventListener(`click`, onErrorMessageClick);
   };
 
-  const errorMessagePressEsc = (evt) => {
+  const onErrorMessagePressEsc = (evt) => {
     if (evt === `Escape`) {
       errorMessage.remove();
-      errorMessage.removeEventListener(`keydown`, errorMessagePressEsc);
+      errorMessage.removeEventListener(`keydown`, onErrorMessagePressEsc);
     }
   };
 
-  errorMessage.addEventListener(`click`, errorMessageClick);
-  errorMessage.addEventListener(`keydown`, errorMessagePressEsc);
-  btnErrorMessage.addEventListener(`click`, errorMessageClick);
+  errorMessage.addEventListener(`click`, onErrorMessageClick);
+  errorMessage.addEventListener(`keydown`, onErrorMessagePressEsc);
+  btnErrorMessage.addEventListener(`click`, onErrorMessageClick);
 };
 
 // Сброс формы по нажатию "Очистить"
@@ -223,7 +223,7 @@ const onButtonResetClick = () => {
   imagesChooser.addEventListener(`change`, window.photo.onImagesChooserClick);
 };
 
-btnReset.addEventListener(`click`, onButtonResetClick);
+buttonReset.addEventListener(`click`, onButtonResetClick);
 
 window.form = {
   setTypeApartment,

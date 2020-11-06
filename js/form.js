@@ -172,10 +172,10 @@ adForm.addEventListener(`submit`, (evt) => {
 
 const resetAll = () => {
   adForm.reset();
+  mapFilters.reset();
   window.map.deactivateForms();
   window.pin.removePins(mapPins, mainPin);
   setDefaultForms();
-  mapFilters.reset();
 };
 
 const onSuccess = () => {

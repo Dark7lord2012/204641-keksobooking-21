@@ -28,6 +28,18 @@ const MinPriceApartment = {
   PALACE: `10000`
 };
 
+const CapacityRooms = {
+  ONE: `1`,
+  TWO: `2`,
+  THREE: `3`,
+  HUNDRED: `100`,
+  ZERO: `0`
+};
+
+const KeyName = {
+  ESCAPE: `Escape`
+};
+
 const setTypeApartment = () => {
   switch (typeApartment.value) {
     case TypeApartment.BUNGALOW:
@@ -95,9 +107,9 @@ const setRoomsApartment = () => {
   }
   let selectedOption;
 
-  if (roomsApartment.value === `1`) {
+  if (roomsApartment.value === CapacityRooms.ONE) {
     for (let option of options) {
-      if (option.value !== `1`) {
+      if (option.value !== CapacityRooms.ONE) {
         option.disabled = true;
         option.selected = false;
       } else {
@@ -105,30 +117,30 @@ const setRoomsApartment = () => {
       }
     }
     selectedOption.selected = true;
-  } else if (roomsApartment.value === `2`) {
+  } else if (roomsApartment.value === CapacityRooms.TWO) {
     for (let option of options) {
-      if (option.value !== `1`
-        && option.value !== `2`) {
+      if (option.value !== CapacityRooms.ONE
+        && option.value !== CapacityRooms.TWO) {
         option.disabled = true;
       } else {
         selectedOption = option;
       }
     }
     selectedOption.selected = true;
-  } else if (roomsApartment.value === `3`) {
+  } else if (roomsApartment.value === CapacityRooms.THREE) {
     for (let option of options) {
-      if (option.value !== `1`
-        && option.value !== `2`
-        && option.value !== `3`) {
+      if (option.value !== CapacityRooms.ONE
+        && option.value !== CapacityRooms.TWO
+        && option.value !== CapacityRooms.THREE) {
         option.disabled = true;
       } else {
         selectedOption = option;
       }
     }
     selectedOption.selected = true;
-  } else if (roomsApartment.value === `100`) {
+  } else if (roomsApartment.value === CapacityRooms.HUNDRED) {
     for (let option of options) {
-      if (option.value !== `0`) {
+      if (option.value !== CapacityRooms.ZERO) {
         option.disabled = true;
       } else {
         selectedOption = option;
@@ -154,9 +166,17 @@ setDefaultForms();
 
 // Отправка формы на сервер
 adForm.addEventListener(`submit`, (evt) => {
-  window.network.save(new FormData(adForm), onSuccess, onError);
+  window.network.save(onSuccess, onError, new FormData(adForm));
   evt.preventDefault();
 });
+
+const resetAll = () => {
+  adForm.reset();
+  window.map.deactivateForms();
+  window.pin.removePins(mapPins, mainPin);
+  setDefaultForms();
+  mapFilters.reset();
+};
 
 const onSuccess = () => {
   const templateSuccess = document.querySelector(`#success`).content;
@@ -167,17 +187,14 @@ const onSuccess = () => {
 
   const onSuccessMessageClick = () => {
     successMessage.remove();
-    adForm.reset();
-    window.map.deactivateForms();
-    window.pin.removePins(mapPins, mainPin);
-    setDefaultForms();
-    mapFilters.reset();
+    resetAll();
     successMessage.removeEventListener(`click`, onSuccessMessageClick);
   };
 
   const onSuccessMessagePressEsc = (evt) => {
-    if (evt.key === `Escape`) {
+    if (evt.key === KeyName.ESCAPE) {
       successMessage.remove();
+      resetAll();
       document.removeEventListener(`keydown`, onSuccessMessagePressEsc);
     }
   };
@@ -200,7 +217,7 @@ const onError = () => {
   };
 
   const onErrorMessagePressEsc = (evt) => {
-    if (evt === `Escape`) {
+    if (evt.key === KeyName.ESCAPE) {
       errorMessage.remove();
       errorMessage.removeEventListener(`keydown`, onErrorMessagePressEsc);
     }
@@ -218,6 +235,7 @@ const onButtonResetClick = () => {
   window.utils.removeChildrenNode(mapPins, mainPin);
   adForm.reset();
   mapFilters.reset();
+  setDefaultForms();
   // Из-за того, что я меняю старое содержимое загрузчика изображения на старое (default)
   // удаляется еще и обработчик при выборе картинок после сброса (deactivateForms - последнии строки)
   const imagesChooser = adForm.querySelector(`#images`);

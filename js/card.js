@@ -1,11 +1,14 @@
 'use strict';
 
+const PRICE_PER_NIGHT = `₽/ночь`;
+
 const TypeApartmentRussian = {
   PALACE: `Дворец`,
   FLAT: `Квартира`,
   HOUSE: `Дом`,
   BUNGALOW: `Бунгало`
 };
+
 
 const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 const removeChildrenNode = window.utils.removeChildrenNode;
@@ -31,7 +34,7 @@ const renderCard = (card) => {
 
   const popupPrice = cardElement.querySelector(`.popup__text--price`);
   if (card.offer.price) {
-    popupPrice.textContent = `${card.offer.price}₽/ночь`;
+    popupPrice.textContent = `${card.offer.price}${PRICE_PER_NIGHT}`;
   } else {
     popupPrice.remove();
   }

@@ -1,5 +1,7 @@
 'use strict';
 
+const ESCAPE_ACTION_KEY = `Escape`;
+
 const adForm = document.querySelector(`.ad-form`);
 const typeApartment = adForm.querySelector(`#type`);
 const priceApartment = adForm.querySelector(`#price`);
@@ -36,9 +38,6 @@ const CapacityRooms = {
   ZERO: `0`
 };
 
-const KeyName = {
-  ESCAPE: `Escape`
-};
 
 const setTypeApartment = () => {
   switch (typeApartment.value) {
@@ -192,7 +191,7 @@ const onSuccess = () => {
   };
 
   const onSuccessMessagePressEsc = (evt) => {
-    if (evt.key === KeyName.ESCAPE) {
+    if (evt.key === ESCAPE_ACTION_KEY) {
       successMessage.remove();
       resetAll();
       document.removeEventListener(`keydown`, onSuccessMessagePressEsc);
@@ -217,7 +216,7 @@ const onError = () => {
   };
 
   const onErrorMessagePressEsc = (evt) => {
-    if (evt.key === KeyName.ESCAPE) {
+    if (evt.key === ESCAPE_ACTION_KEY) {
       errorMessage.remove();
       errorMessage.removeEventListener(`keydown`, onErrorMessagePressEsc);
     }

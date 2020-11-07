@@ -1,6 +1,7 @@
 'use strict';
 
 const PRICE_PER_NIGHT = `₽/ночь`;
+const ESCAPE_ACTION_KEY = `Escape`;
 
 const TypeApartmentRussian = {
   PALACE: `Дворец`,
@@ -115,7 +116,7 @@ const onBtnCloseCardClick = () => {
 };
 
 const onCardPopupKeydown = (evt) => {
-  if (evt.key === `Escape`) {
+  if (evt.key === ESCAPE_ACTION_KEY) {
     closeCardPopup();
   }
 };
